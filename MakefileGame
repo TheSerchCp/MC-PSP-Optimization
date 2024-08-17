@@ -1,0 +1,111 @@
+TARGET = Tutorial1
+OBJS = source/Aurora/Math/MathLib.o \
+Minecraft/Player/StatePlay.o \
+Minecraft/Player/StatePlayCreative.o \
+Minecraft/World/SimpleMeshChunk2.o \
+Minecraft/World/ChunkDataProvider.o \
+Minecraft/World/WorldGenerator.o \
+Minecraft/World/SimplexNoise.o \
+Minecraft/StateMenu.o \
+Minecraft/Blocks.o \
+Minecraft/CraftWorld2.o \
+source/Aurora/Graphics/Effects/InventoryPlayer.o \
+Minecraft/SoundManager.o \
+Minecraft/BaseBlock.o \
+Minecraft/Items.o \
+Minecraft/BaseItem.o \
+Minecraft/BlockEntity.o \
+Minecraft/NoteBlockEntity.o \
+Minecraft/JukeboxEntity.o \
+Minecraft/MonsterSpawnerEntity.o \
+Minecraft/ItemFrameEntity.o \
+Minecraft/Chest2.o \
+Minecraft/DirectionBlock.o \
+Minecraft/Furnace2.o \
+Minecraft/LameMob.o \
+Minecraft/Mobs/Chicken2.o \
+Minecraft/Mobs/Creeper2.o \
+Minecraft/Mobs/Spidercave2.o \
+Minecraft/Mobs/Spider2.o \
+Minecraft/Mobs/Zombie2.o \
+Minecraft/Mobs/Enderman.o \
+Minecraft/Mobs/Cow2.o \
+Minecraft/Mobs/Pig2.o \
+Minecraft/Mobs/Sheep2.o \
+Minecraft/StateOptions.o \
+Minecraft/LoadingScreen.o \
+Minecraft/Screens/Splash/SplashScreen.o \
+Minecraft/Screens/InitMenu/ControlInitMenu.o \
+Minecraft/Screens/InitMenu/DrawInitMenu.o \
+Minecraft/InputHelper.o \
+Minecraft/TextureHelper.o \
+Minecraft/sound_utils/pgeWav.o \
+Minecraft/mersenne-twister.o \
+Minecraft/sound_utils/vfsFile.o \
+Minecraft/sound_utils/VirtualFile.o \
+Minecraft/sound_utils/audio.o \
+Minecraft/sound_utils/bgm.o \
+Minecraft/sound_utils/media.o \
+Minecraft/sound_utils/mod.o \
+source/Aurora/Math/Matrix3.o \
+source/Aurora/Math/Matrix4.o \
+source/Aurora/Math/Quaternion.o \
+source/Aurora/Math/BoundingBox.o \
+source/Aurora/Math/BoundingSphere.o \
+source/Aurora/Math/Plane.o \
+source/Aurora/Math/Ray.o \
+source/Aurora/Math/Frustum.o \
+source/Aurora/Math/Polygon.o \
+source/Aurora/Graphics/common.o \
+source/Aurora/Graphics/vfram.o \
+source/Aurora/Graphics/vram.o \
+source/Aurora/Graphics/TextureManager.o \
+source/Aurora/Graphics/Sprite.o \
+source/Aurora/Graphics/Models/ObjModel.o \
+source/Aurora/Graphics/Models/ObjModel.o \
+source/Aurora/Graphics/intraFont/libccc.o \
+source/Aurora/Graphics/intraFont/intraFont.o \
+source/Aurora/Utils/Logger.o \
+source/Aurora/Utils/Timer.o \
+source/Aurora/Utils/StateManager.o \
+source/Aurora/Utils/pgeZip.o \
+source/Aurora/Utils/pge.o \
+source/Aurora/Utils/pgeDir.o \
+source/Aurora/System/SystemManager.o \
+source/Aurora/System/NetworkManager.o \
+source/Aurora/Graphics/Effects/Arrow2.o \
+source/Aurora/Graphics/Camera.o \
+source/Aurora/Graphics/Effects/Particle.o \
+source/Aurora/Graphics/RenderManager.o \
+source/Aurora/Graphics/Effects/Drop.o \
+source/Aurora/Graphics/Effects/TNT.o \
+source/Aurora/Graphics/Effects/SnowBall2.o \
+source/Aurora/Graphics/Effects/SkyLight.o \
+source/Aurora/Graphics/Effects/SkyBox.o \
+source/Aurora/Graphics/Effects/Destroyer.o \
+source/Aurora/Graphics/Effects/StarsBox.o \
+source/Aurora/Graphics/Effects/WeatherSystem.o \
+Minecraft.o
+
+INCDIR = $(PSPPATH)/include
+INCDIR += ./include ./source ./3libs
+CFLAGS = -O3 -G0 -Wall -mpreferred-stack-boundary=4 #-enable-newlib-hw-fp -ffast-math
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+BUILD_PRX = 1
+PSP_FW_VERSION=371
+PSP_LARGE_MEMORY = 1
+
+LIBDIR += ./3libs/noisepp ./3libs/libpspmath
+LDFLAGS =
+LIBS=  -lNoisepp -lpspaudiolib -lpspaudio -lmikmod -lmmio -lpspaudiocodec -lpng -lz -lpspgum -lpspgu -lstdc++ -lpsprtc -lpspctrl -lm -lpspvfpu -lpspsdk -lpsppower -lpsphttp -lpspmath #-lpsp_req -lcurl -lTiny
+
+EXTRA_TARGETS = EBOOT.PBP
+PSP_EBOOT_TITLE = Minecraft: PlayStation(R)Portable
+PSP_EBOOT_ICON = ICON0.png
+PSP_EBOOT_PIC1 = PIC1.png
+PSP_EBOOT_SND0 = SND0.AT3
+
+PSPSDK=$(shell psp-config --pspsdk-path)
+include $(PSPSDK)/lib/build.mak
