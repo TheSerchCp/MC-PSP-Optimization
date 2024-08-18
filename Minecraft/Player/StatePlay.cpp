@@ -11694,7 +11694,9 @@ void StatePlay::Draw(StateManager* sManager)
 			MatrixPush();
 			if (playerPosition.y <= 48)
 			{
-				MatrixColor(GU_COLOR(mWorld->brightFactor * (playerPosition.y / 48.0f), mWorld->brightFactor * (playerPosition.y / 48.0f), mWorld->brightFactor * (playerPosition.y / 48.0f), 1 - mWorld->rainyColorAlpha));
+				MatrixColor(GU_COLOR(mWorld->brightFactor * (playerPosition.y / 48.0f), 
+                                     mWorld->brightFactor * (playerPosition.y / 48.0f), 
+                                     mWorld->brightFactor * (playerPosition.y / 48.0f), 1 - mWorld->rainyColorAlpha));
 			}
 			else
 			{

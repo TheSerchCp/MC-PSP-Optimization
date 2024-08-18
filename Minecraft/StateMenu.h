@@ -34,19 +34,16 @@
 	#include <sys/stat.h>
 #endif
 
-//Control system independent 
-#include <Minecraft/Screens/InitMenu/ControlInitMenu.h>
-//Draw system independent
-#include <Minecraft/Screens/InitMenu/DrawInitMenu.h>
-
-
 #include "SoundManager.h"
+
+//Inclusion de pantallas
+#include <Minecraft/Screens/InitMenu/InitMenu.h>
 
 using namespace Aurora::Graphics;
 using namespace Aurora::Utils;
 using namespace Aurora::System;
 using namespace Aurora;
-
+//Actuara como la clase base para todas las pantallas
 class SaveFile
 {
 public:
@@ -90,69 +87,30 @@ public:
 	//Controls Independents for each screen d-pad,analog
 
 	
-	//Draw independents for each screen
+	/*Draw independents for each screen*/
 
-void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
+	//DrawText
+	void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
+	//buttonSprite
+	void DrawButton(int posX, int posY, bool isSelected, const char* label); 
+	//sbuttonSprite
+	void DrawSButton(int posX, int posY, const char *label); 
+	//buttonSmallSprite
+	void DrawSmallButton(int posX, int posY, const char *label); 
+	//sbuttonSmallSprite
+	void DrawSButtonSmall(int posX, int posY, const char *label); 
+	//backSprite
+	void DrawBackButton(int posX, int posY, bool isSelected, const char* label);
 
-
-private:
-
-	void ScanSaveFiles(const char* dirName);
-	void ScanTexturePacks(const char* dirName);
-	
-	inline bool fileExists(const std::string& name);
-	int fileSize(const std::string& name);
-
-    unsigned int hash(const char* s, unsigned int seed);
-
-private:
-
-    typedef struct Statistics
-    {
-        unsigned short blockPlaced;
-        unsigned short blockDestroyed;
-        unsigned short daysInGame;
-        unsigned short minutesPlayed;
-        unsigned short itemsCrafted;
-        unsigned short itemsSmelted;
-        unsigned short jumps;
-        unsigned short dies;
-        unsigned short foodEaten;
-        unsigned short badlyFalls;
-        unsigned short blocksWalked;
-        unsigned short treesGrowned;
-        unsigned short cropsGrowned;
-        unsigned short soilPlowed;
-        unsigned short timeInWater;
-        unsigned short timeInAir;
-        unsigned short damageRecieved;
-    } st;
-
-    typedef struct Options
-    {
-        bool useMipsTexturing;
-        bool detailedSky;
-        bool fastRendering;
-        bool newSprintOption;
-        bool freezeDayTime;
-        bool sounds;
-        bool music;
-        bool autoJump;
-        bool worldBlockAnimation;
-        bool fogRendering;
-        bool smoothLighting;
-        bool particles;
-        bool guiDrawing;
-        bool buttonsDrawing;
-
-        float fov;
-        char horizontalViewDistance;
-        char verticalViewDistance;
-        int difficult;
-    } opt;
-
-    st mainStatistics;
-    opt mainOptions;
+	void DrawTextLabel(int posX, int posY, const char* label, bool isSelected = false);
+	void DrawMenuHeader(const char* header);
+	void DrawBackground();
+	void DrawMinecraft(int posX, int posY);
+	void DrawSkin(int posX, int posY);
+	void DrawLanguage(int posX, int posY);
+	void DrawSSkin(int posX, int posY);
+	void DrawSLanguage(int posX, int posY);
+	void DrawSteve(int posX, int posY);
 
     Sprite *backgroundSprite;
     float bx, by;
@@ -274,6 +232,67 @@ private:
 	int tpStart;
 	int tpPos;
 	int tpSelectPos;
+
+private:
+
+	void ScanSaveFiles(const char* dirName);
+	void ScanTexturePacks(const char* dirName);
+	
+	inline bool fileExists(const std::string& name);
+	int fileSize(const std::string& name);
+
+    unsigned int hash(const char* s, unsigned int seed);
+
+	InitMenu initMenu;
+
+private:
+
+    typedef struct Statistics
+    {
+        unsigned short blockPlaced;
+        unsigned short blockDestroyed;
+        unsigned short daysInGame;
+        unsigned short minutesPlayed;
+        unsigned short itemsCrafted;
+        unsigned short itemsSmelted;
+        unsigned short jumps;
+        unsigned short dies;
+        unsigned short foodEaten;
+        unsigned short badlyFalls;
+        unsigned short blocksWalked;
+        unsigned short treesGrowned;
+        unsigned short cropsGrowned;
+        unsigned short soilPlowed;
+        unsigned short timeInWater;
+        unsigned short timeInAir;
+        unsigned short damageRecieved;
+    } st;
+
+    typedef struct Options
+    {
+        bool useMipsTexturing;
+        bool detailedSky;
+        bool fastRendering;
+        bool newSprintOption;
+        bool freezeDayTime;
+        bool sounds;
+        bool music;
+        bool autoJump;
+        bool worldBlockAnimation;
+        bool fogRendering;
+        bool smoothLighting;
+        bool particles;
+        bool guiDrawing;
+        bool buttonsDrawing;
+
+        float fov;
+        char horizontalViewDistance;
+        char verticalViewDistance;
+        int difficult;
+    } opt;
+
+	st mainStatistics;
+    opt mainOptions;
 };
 
 #endif

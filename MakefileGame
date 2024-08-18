@@ -35,8 +35,7 @@ Minecraft/Mobs/Sheep2.o \
 Minecraft/StateOptions.o \
 Minecraft/LoadingScreen.o \
 Minecraft/Screens/Splash/SplashScreen.o \
-Minecraft/Screens/InitMenu/ControlInitMenu.o \
-Minecraft/Screens/InitMenu/DrawInitMenu.o \
+Minecraft/Screens/InitMenu/InitMenu.o \
 Minecraft/InputHelper.o \
 Minecraft/TextureHelper.o \
 Minecraft/sound_utils/pgeWav.o \

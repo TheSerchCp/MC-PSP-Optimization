@@ -90,6 +90,7 @@ public:
          sheepTexture,
          sheepFurTexture,
          background,
+         panorama,
 		 HellPortalAnimation,
 	};
     std::string texturePatch;

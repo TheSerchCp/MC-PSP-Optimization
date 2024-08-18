@@ -91,6 +91,7 @@ void TextureHelper::Init()
 	FastLoadTexture("entity/sheep.png");
 	FastLoadTexture("entity/sheep_fur.png");
 	FastLoadTexture("title/background.png");
+	FastLoadTexture("title/panorama.png");
 	FastLoadTexture("hell_portal.png");
 }
 
@@ -523,6 +524,12 @@ int TextureHelper::GetTexture(Textures texture)
 			return TextureManager::Instance()->GetTextureNumber(fileName);
 		}
 		break;
+		case panorama:
+		{
+			fileName = texturePatch + "title/panorama.png";
+			return TextureManager::Instance()->GetTextureNumber(fileName);
+		}
+		break;
 		case HellPortalAnimation:
 		{
 			fileName = texturePatch + "hell_portal.png";
@@ -611,6 +618,7 @@ void TextureHelper::SetTexturePack(std::string name)
     FastLoadTexture("entity/sheep.png");
     FastLoadTexture("entity/sheep_fur.png");
     FastLoadTexture("title/background.png");
+	FastLoadTexture("title/panorama.png");
 	FastLoadTexture("hell_portal.png");
 }
 
