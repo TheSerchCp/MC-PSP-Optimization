@@ -2,12 +2,17 @@
 > Optimizing Minecraft for psp based on MC-PSP 3.3.0 By Regen Studio.
 ## RoadMap
  - [ ] Restructuring MC-PSP Source Code
-   -  [ ] Restructuring Mobs,Player,Worl
-     - [ ] Restructuring World
+   -  [ ] Restructure Mobs,Player,World
+     - [ ] Restructure Mobs
+       - [ ]  Mob Logic
+       - [ ]  Mob Modeling
+     - [ ]  Restructure Player
+       - [ ]  Player logic
+     - [ ] Restructure World
        - [ ] Chunk generation.
        - [ ] Perlin noise generation.
        - [ ] Extract World Functions from CraftWorld to other class.
-     - [ ] Restructuring Screens
+     - [ ] Restructure Screens
        - [ ] Splash
        - [ ] Main
        - [ ] Options
