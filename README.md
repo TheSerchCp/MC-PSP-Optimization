@@ -4,22 +4,22 @@
  - [ ] Restructuring MC-PSP Source Code
    - [ ] Restructure Mobs,Player,World
       - [ ] Restructure Mobs
-       - [ ]  Mob Logic
-       - [ ]  Mob Modeling
-     - [ ]  Restructure Player
-       - [ ]  Player logic
-     - [ ] Restructure World
-       - [ ] Chunk generation.
-       - [ ] Perlin noise generation.
-       - [ ] Extract World Functions from CraftWorld to other class.
-     - [ ] Restructure Screens
-       - [ ] Splash
-       - [ ] Main
-       - [ ] Options
-       - [ ] Textures
-       - [ ] Skins
-       - [ ] Languages
-       - [ ] World Selection and creation.
+        - [ ]  Mob Logic
+        - [ ]  Mob Modeling
+      - [ ]  Restructure Player
+        - [ ]  Player logic
+      - [ ] Restructure World
+        - [ ] Chunk generation.
+        - [ ] Perlin noise generation.
+        - [ ] Extract World Functions from CraftWorld to other class.
+      - [ ] Restructure Screens
+        - [ ] Splash
+        - [ ] Main
+        - [ ] Options
+        - [ ] Textures
+        - [ ] Skins
+        - [ ] Languages
+        - [ ] World Selection and creation.
    - [ ] Apply optimizations to reduce redundant code.
    - [ ] Add MedianEngine Lib By Iridescence.
    - [ ] Optimize perlin noise based on Iridescence.
