@@ -36,6 +36,7 @@ Minecraft/StateOptions.o \
 Minecraft/LoadingScreen.o \
 Minecraft/Screens/Splash/SplashScreen.o \
 Minecraft/Screens/InitMenu/InitMenu.o \
+Minecraft/Screens/MainMenu/MainMenu.o \
 Minecraft/InputHelper.o \
 Minecraft/TextureHelper.o \
 Minecraft/sound_utils/pgeWav.o \

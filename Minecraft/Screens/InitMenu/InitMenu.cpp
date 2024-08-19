@@ -47,7 +47,7 @@ void InitMenu::InitializeStateVariables()
 void InitMenu::Draw()
 {
     DrawBackground();
-    DrawButton(240,120,selectPos,"English");
-    DrawButton(240,120,selectPos,"Spanish");
-    DrawSButton(240,(selectPos * 40) + 120,"Select Language");
+    DrawButton({{240,120},{240,129}},{2,2},selectPos == 0,"English");
+    DrawButton({{240,160},{240,169}},{2,2},selectPos == 0,"Spanish");
+    DrawSButton({{240,static_cast<float>((selectPos * 40) + 120)},{240,24}},{2,2},selectPos == 3,"Select your Language");
 }

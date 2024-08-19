@@ -14,10 +14,10 @@
 // font vars
 #define default_size 0.5
 #define default_big_size 0.687
-#define PI 3.1415926535897f
+
 
 #define ENGLISH 1
-#define RUSSIAN 2
+#define SPANISH 2
 
 #define SURVIVAL 0
 #define CREATIVE 1
@@ -27,6 +27,7 @@ using namespace Aurora::Graphics;
 using namespace Aurora::Utils;
 using namespace Aurora::System;
 using namespace Aurora;
+
 
 StateMenu::StateMenu()
 {
@@ -38,20 +39,21 @@ StateMenu::~StateMenu()
 
 void StateMenu::Init()
 {
-    newW_width = 0;
+   newW_width = 0;
     newW_height = 0;
     newW_length = 0;
 
     newW_gameMode = SURVIVAL;
     newW_deleteCaves = true;
-
+	
     conversionStage = 0;
     errorType = 0;
 
     converterPos = 0;
-    schematicExists = false; // cuevas
+    schematicExists = false;	//cuevas
 
     lol = "";
+
 
     mainStatistics.blockPlaced = 0;
     mainStatistics.blockDestroyed = 0;
@@ -72,7 +74,7 @@ void StateMenu::Init()
     mainStatistics.damageRecieved = 0;
     // end
 
-    // �������������� ���������� �����
+    // Èíèöèàëèçèðóåì ïåðåìåííûå îïöèé
     mainOptions.detailedSky = 1;
     mainOptions.smoothLighting = true;
     mainOptions.sounds = 1;
@@ -89,122 +91,134 @@ void StateMenu::Init()
     mainOptions.horizontalViewDistance = 4;
     mainOptions.verticalViewDistance = 1;
     mainOptions.guiDrawing = 1;
-    mainOptions.buttonsDrawing = 1;
+	mainOptions.buttonsDrawing = 1;
 
-    // set render manager instance
+     // Initialize screens draw
+    initMenu.Init();
+    mainMenu.Init();
+
+    //set render manager instance
     mRender = RenderManager::InstancePtr();
     mSystemMgr = SystemManager::Instance();
     mSoundMgr = SoundManager::Instance();
 
-    //Initialize screens draw
-    initMenu.Init();
+    logoSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Logo),0,0,256,64);
+    logoSprite->Scale(1.5f,1.5f);
+    logoSprite->SetPosition(240,50);
 
-    logoSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Logo), 0, 0, 256, 64);
-    logoSprite->Scale(1.5f, 1.5f);
-    logoSprite->SetPosition(240, 50);
+    backgroundSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::background));
+    backgroundSprite->Scale(2,2);
+    backgroundSprite->SetPosition(240,136);
 
-    
-    // backgroundSprite->Scale(2, 2);
-    // backgroundSprite->SetPosition(240, 136);
+    bx = 240;
+    by = 136;
+    directionx = rand() % 2;
+    directiony = rand() % 2;
 
+    rectFilledSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Rectangles),0,0,230,37);
+    rectFilledSprite->SetPosition(240,150);
+    rectFilledSprite->Scale(2,2);
 
+    rectEmptySprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Rectangles),0,37,230,37);
+    rectEmptySprite->SetPosition(240,150);
+    rectEmptySprite->Scale(2,2);
 
-    rectFilledSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Rectangles), 0, 0, 230, 37);
-    rectFilledSprite->SetPosition(240, 150);
-    rectFilledSprite->Scale(2, 2);
+    buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,0,95,12); // stand
+    buttonSprite->SetPosition(240,150);
+    buttonSprite->Scale(2,2);
+	
+	//menu
+	menuSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::World),0,0,64,64);
+    menuSprite->Scale(0.6,0.6);
 
-    rectEmptySprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Rectangles), 0, 37, 230, 37);
-    rectEmptySprite->SetPosition(240, 150);
-    rectEmptySprite->Scale(2, 2);
+	smenuSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::DeselectedWorld),0,0,64,64);
+    smenuSprite->Scale(0.6,0.6);
 
- 
+    sbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,12,95,12); // stand selected
+    sbuttonSprite->SetPosition(240,150);
+    sbuttonSprite->Scale(2,2);
 
-    // menu
-    menuSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::World), 0, 0, 64, 64);
-    menuSprite->Scale(0.6, 0.6);
-
-    smenuSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::DeselectedWorld), 0, 0, 64, 64);
-    smenuSprite->Scale(0.6, 0.6);
-
-   
-
-    nbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 24, 95, 12); // dark
-    nbuttonSprite->SetPosition(240, 150);
-    nbuttonSprite->Scale(2, 2);
+    nbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,24,95,12); // dark
+    nbuttonSprite->SetPosition(240,150);
+    nbuttonSprite->Scale(2,2);
 
     // small buttons
-    // buttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 0, 95, 12); // stand
-    // buttonSmallSprite->SetPosition(240, 150);
-    // buttonSmallSprite->Scale(0.45f, 1.0f);
-    // buttonSmallSprite->Scale(2, 2);
+    buttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,0,95,12); // stand
+    buttonSmallSprite->SetPosition(240,150);
+    buttonSmallSprite->Scale(0.45f,1.0f);
+    buttonSmallSprite->Scale(2,2);
 
-    // sbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 12, 95, 12); // stand selected
-    // sbuttonSmallSprite->SetPosition(240, 150);
-    // sbuttonSmallSprite->Scale(0.45f, 1.0f);
-    // sbuttonSmallSprite->Scale(2, 2);
+    sbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,12,95,12); // stand selected
+    sbuttonSmallSprite->SetPosition(240,150);
+    sbuttonSmallSprite->Scale(0.45f,1.0f);
+    sbuttonSmallSprite->Scale(2,2);
 
-    nbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 24, 95, 12); // dark
-    nbuttonSmallSprite->SetPosition(240, 150);
-    nbuttonSmallSprite->Scale(0.45f, 1.0f);
-    nbuttonSmallSprite->Scale(2, 2);
+    nbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,24,95,12); // dark
+    nbuttonSmallSprite->SetPosition(240,150);
+    nbuttonSmallSprite->Scale(0.45f,1.0f);
+    nbuttonSmallSprite->Scale(2,2);
+	
+    mbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,36,95,12); // gray
+    mbuttonSprite->SetPosition(240,150);
+    mbuttonSprite->Scale(2,2);
 
-    mbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 36, 95, 12); // gray
-    mbuttonSprite->SetPosition(240, 150);
-    mbuttonSprite->Scale(2, 2);
+    smbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,48,95,12); // gray selected
+    smbuttonSprite->SetPosition(240,150);
+    smbuttonSprite->Scale(2,2);
 
-    smbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 48, 95, 12); // gray selected
-    smbuttonSprite->SetPosition(240, 150);
-    smbuttonSprite->Scale(2, 2);
+    backSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Dirt),0,0,32,32);
+    backSprite->Scale(2,2);
+	
+	lenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),12,60,12,12);
+	lenguageSprite->SetPosition(0,0);
+	lenguageSprite->Scale(2,2);
+	
+	slenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),24,60,12,12);
+	slenguageSprite->SetPosition(0,0);
+	slenguageSprite->Scale(2,2);
+	
+	skinSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),36,60,12,12);
+	skinSprite->SetPosition(0,0);
+	skinSprite->Scale(2,2);
+	
+	sskinSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),48,60,12,12);
+	sskinSprite->SetPosition(0,0);
+	sskinSprite->Scale(2,2);
 
-    // lenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 12, 60, 12, 12);
-    // lenguageSprite->SetPosition(0, 0);
-    // lenguageSprite->Scale(2, 2);
+    lamecraftSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::lameCraft),0,0,320,90);
+    lamecraftSprite->SetPosition(240,50);
+    lamecraftSprite->Scale(0.85,0.85);
 
-    // slenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 24, 60, 12, 12);
-    // slenguageSprite->SetPosition(0, 0);
-    // slenguageSprite->Scale(2, 2);
-
-    // skinSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 36, 60, 12, 12);
-    // skinSprite->SetPosition(0, 0);
-    // skinSprite->Scale(2, 2);
-
-    // sskinSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 48, 60, 12, 12);
-    // sskinSprite->SetPosition(0, 0);
-    // sskinSprite->Scale(2, 2);
-
-    // MinecraftSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Minecraft), 0, 0, 320, 90);
-    // MinecraftSprite->SetPosition(240, 50);
-    // MinecraftSprite->Scale(0.85, 0.85);
-
-    blackBackground = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 87, 60, 8, 8);
-    blackBackground->SetPosition(240, 116);
-    blackBackground->Scale(60, 22);
-
-    ///*-----STEVE MODEL-----*///
-
-    // steveHead = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve), 8, 8, 8, 8);
-    // steveHead->Scale(3, 3);
-
-    // steveHeadCapa = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve), 40, 8, 8, 8);
-    // steveHeadCapa->Scale(3, 3);
-
-    // steveBody = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve), 20, 20, 8, 12);
-    // steveBody->Scale(3, 3);
-
-    // steveHand = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve), 44, 20, 4, 12);
-    // steveHand->Scale(3, 3);
-
-    // steveLeg = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve), 4, 20, 4, 12);
-    // steveLeg->Scale(3, 3);
-
-    ///*-----END-----*///
+    blackBackground = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),87,60,8,8);
+    blackBackground->SetPosition(240,116);
+    blackBackground->Scale(60,22);
+	
+	///*-----STEVE MODEL-----*///
+	
+	steveHead = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),8,8,8,8);
+	steveHead->Scale(3,3);
+	
+	steveHeadCapa = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),40,8,8,8);
+	steveHeadCapa->Scale(3,3);
+	
+	steveBody = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),20,20,8,12);
+	steveBody->Scale(3,3);
+	
+	steveHand = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),44,20,4,12);
+	steveHand->Scale(3,3);
+	
+	steveLeg = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),4,20,4,12);
+	steveLeg->Scale(3,3);
+	
+	///*-----END-----*///
 
     selectPos = 0;
 
-    // load save info
+    //load save info
     ScanSaveFiles("Save/");
     ScanTexturePacks("Assets/Textures/");
 
+    menuState = -1;
     loadSelectPos = 0;
     loadSavePos = 0;
     aboutPos = 0;
@@ -215,7 +229,7 @@ void StateMenu::Init()
 
     size_f = 0.347f;
 
-    // for map generation
+    //for map generation
     makeTrees = true;
     makeDungeons = true;
     makeBonus = false;
@@ -236,26 +250,26 @@ void StateMenu::Init()
     newWorldNamestr = newWorldName.c_str();
     currentVersion = 140;
 
-    // input helper
+    //input helper
     InputHelper::Instance()->Init();
     InputHelper::Instance()->Load();
 
-    animationscreen = 1;
-    fontcoloroption = 0;
-    fontcolor = 0;
-    srand(time(0));
+	animationscreen = 1;
+	fontcoloroption = 0;
+	fontcolor = 0;
+	srand(time(0));
 
     tpCurrent = 0;
-    tpMax = 0;
-    tpEnd = 0;
-    tpStart = 0;
-    tpPos = 0;
-    tpSelectPos = 0;
+	tpMax = 0;
+	tpEnd = 0;
+	tpStart = 0;
+	tpPos = 0;
+	tpSelectPos = 0;
 
-    for (int i = 0; i <= 31; i++)
-    {
-        worldName[i] = ' ';
-    }
+	for(int i = 0; i <= 31; i++)
+	{
+	    worldName[i] = ' ';
+	}
 }
 
 void StateMenu::Enter()
@@ -2304,226 +2318,12 @@ void StateMenu::Draw(StateManager *sManager)
     {
     case -1: // language menu
     {
-       
+        initMenu.Draw();
     }
     break;
     case 0: // main menu
     {
-
-        sceGuDisable(GU_DEPTH_TEST);
-        sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1, 1, 1, 1.0f));
-
-        if (bx >= 360)
-        {
-            directionx = false;
-        }
-        if (bx <= 120)
-        {
-            directionx = true;
-        }
-
-        if (by >= 272 - 68)
-        {
-            directiony = false;
-        }
-        if (by <= 68)
-        {
-            directiony = true;
-        }
-
-        if (directionx == true)
-        {
-            bx += 1 / 6.0f;
-        }
-        else
-        {
-            bx -= 1 / 6.0f;
-        }
-
-        if (directiony == true)
-        {
-            by += 272.0f / 960.0f / 6.0f;
-        }
-        else
-        {
-            by -= 272.0f / 960.0f / 6.0f;
-        }
-
-        backgroundSprite->SetPosition(bx, by);
-        backgroundSprite->DrawLinear();
-
-        // logo
-        MinecraftSprite->SetPosition(240, 40);
-        MinecraftSprite->Draw();
-
-        // play
-        buttonSprite->SetPosition(240, 110);
-        buttonSprite->Draw();
-
-        // options
-        buttonSprite->SetPosition(240, 140);
-        buttonSprite->Draw();
-
-        // about
-        buttonSmallSprite->SetPosition(188, 170);
-        buttonSmallSprite->Draw();
-
-        // texture pack
-        buttonSmallSprite->SetPosition(292, 170);
-        buttonSmallSprite->Draw();
-
-        // donate
-        buttonSmallSprite->SetPosition(188, 200);
-        buttonSmallSprite->Draw();
-
-        // quit
-        buttonSmallSprite->SetPosition(292, 200);
-        buttonSmallSprite->Draw();
-
-        // skin
-        skinSprite->SetPosition(130, 170);
-        skinSprite->Draw();
-
-        // idioma
-        lenguageSprite->SetPosition(130, 200);
-        lenguageSprite->Draw();
-
-        if (selectPos == 0)
-        {
-            sbuttonSprite->SetPosition(240, 110);
-            sbuttonSprite->Draw();
-        }
-        else if (selectPos == 1)
-        {
-            sbuttonSprite->SetPosition(240, 140);
-            sbuttonSprite->Draw();
-        }
-        else if (selectPos == 2)
-        {
-            sbuttonSmallSprite->SetPosition(188, 170);
-            sbuttonSmallSprite->Draw();
-        }
-        else if (selectPos == 3)
-        {
-            sbuttonSmallSprite->SetPosition(292, 170);
-            sbuttonSmallSprite->Draw();
-        }
-        else if (selectPos == 4)
-        {
-            sbuttonSmallSprite->SetPosition(188, 200);
-            sbuttonSmallSprite->Draw();
-        }
-        else if (selectPos == 5)
-        {
-            sbuttonSmallSprite->SetPosition(292, 200);
-            sbuttonSmallSprite->Draw();
-        }
-        else if (selectPos == 6)
-        {
-            sskinSprite->SetPosition(130, 170);
-            sskinSprite->Draw();
-        }
-        else
-        {
-            slenguageSprite->SetPosition(130, 200);
-            slenguageSprite->Draw();
-        }
-
-        steveHead->SetPosition(366, 128);
-        steveHead->Draw();
-
-        steveHeadCapa->SetPosition(366, 128);
-        steveHeadCapa->Draw();
-
-        steveBody->SetPosition(366, 158);
-        steveBody->Draw();
-
-        steveLeg->SetPosition(360, 194);
-        steveLeg->Draw();
-
-        steveLeg->SetPosition(372, 194);
-        steveLeg->Draw();
-
-        steveHand->SetPosition(348, 158);
-        steveHand->Draw();
-
-        steveHand->SetPosition(384, 158);
-        steveHand->Draw();
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-
-        splashSize += 0.13f;
-        if (splashSize > 2 * PI)
-        {
-            splashSize = 0.0f;
-        }
-
-        DrawText(420, 272, GU_COLOR(1, 1, 1, 1), 0.35, "Minecraft PSP BETA");
-
-        if (RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH)
-        {
-            selectPos == 0 ? DrawText(240, 119, GU_COLOR(1, 1, 0.25, 1), default_size, "Play") : DrawText(240, 119, GU_COLOR(1, 1, 1, 1), default_size, "Play");
-            selectPos == 1 ? DrawText(240, 149, GU_COLOR(1, 1, 0.25, 1), default_size, "Options") : DrawText(240, 149, GU_COLOR(1, 1, 1, 1), default_size, "Options");
-            selectPos == 2 ? DrawText(188, 179, GU_COLOR(1, 1, 0.25, 1), default_size, "About") : DrawText(188, 179, GU_COLOR(1, 1, 1, 1), default_size, "About");
-            selectPos == 3 ? DrawText(292, 179, GU_COLOR(1, 1, 0.25, 1), default_size, "Textures") : DrawText(292, 179, GU_COLOR(1, 1, 1, 1), default_size, "Textures");
-            selectPos == 4 ? DrawText(188, 209, GU_COLOR(1, 1, 0.25, 1), default_size, "More") : DrawText(188, 209, GU_COLOR(1, 1, 1, 1), default_size, "More");
-            selectPos == 5 ? DrawText(292, 209, GU_COLOR(1, 1, 0.25, 1), default_size, "Quit") : DrawText(292, 209, GU_COLOR(1, 1, 1, 1), default_size, "Quit");
-        }
-
-        if (RenderManager::InstancePtr()->GetFontLanguage() == RUSSIAN)
-        {
-            selectPos == 0 ? DrawText(240, 119, GU_COLOR(1, 1, 0.25, 1), default_size, "Jugar") : DrawText(240, 119, GU_COLOR(1, 1, 1, 1), default_size, "Jugar");
-            selectPos == 1 ? DrawText(240, 149, GU_COLOR(1, 1, 0.25, 1), default_size, "Opciones") : DrawText(240, 149, GU_COLOR(1, 1, 1, 1), default_size, "Opciones");
-            selectPos == 2 ? DrawText(188, 179, GU_COLOR(1, 1, 0.25, 1), default_size, "Sobre") : DrawText(188, 179, GU_COLOR(1, 1, 1, 1), default_size, "Sobre");
-            selectPos == 3 ? DrawText(292, 179, GU_COLOR(1, 1, 0.25, 1), default_size, "Texturas") : DrawText(292, 179, GU_COLOR(1, 1, 1, 1), default_size, "Texturas");
-            selectPos == 4 ? DrawText(188, 209, GU_COLOR(1, 1, 0.25, 1), default_size, "Mas") : DrawText(188, 209, GU_COLOR(1, 1, 1, 1), default_size, "Mas");
-            selectPos == 5 ? DrawText(292, 209, GU_COLOR(1, 1, 0.25, 1), default_size, "Salir") : DrawText(292, 209, GU_COLOR(1, 1, 1, 1), default_size, "Salir");
-        }
-
-        switch (SplashNumber)
-        {
-        case 0:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "More polygons!");
-            break;
-        case 1:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Find dungeons!");
-            break;
-        case 2:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Kaaneeeedaaaa!");
-            break;
-        case 3:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Music by C418!");
-            break;
-        case 4:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Ride the pig!");
-            break;
-        case 5:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Not approved by Mojang!");
-            break;
-        case 6:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Do not distribute!");
-            break;
-        case 7:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Spiders everywhere!");
-            break;
-        case 8:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Sublime!");
-            break;
-        case 9:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "12345 is a bad password!");
-            break;
-        case 10:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Follow the train, CJ!");
-            break;
-        case 11:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "Exploding creepers!");
-            break;
-        case 12:
-            DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "RegenStudio = new Regen();");
-            break;
-        }
+        mainMenu.Draw();
     }
     break;
     case 1: // select world
@@ -3737,17 +3537,17 @@ void StateMenu::DrawBackground()
 {
     sceGuDisable(GU_DEPTH_TEST);
     sceGuEnable(GU_BLEND);
-    //Test other way back original
-    // for (int x = 0; x < 8; x++)
-    // {
-    //     for (int y = 0; y < 5; y++)
-    //     {
-    //         backSprite->SetPosition(x * 64, y * 64);
-    //         backSprite->Draw();
-    //     }
-    // }
+    // Test other way back original
+    //  for (int x = 0; x < 8; x++)
+    //  {
+    //      for (int y = 0; y < 5; y++)
+    //      {
+    //          backSprite->SetPosition(x * 64, y * 64);
+    //          backSprite->Draw();
+    //      }
+    //  }
 
-   /*Origianl background code */
+    /*Origianl background code */
     /*if(bx >= 360)
         {
             directionx = false;
@@ -3784,114 +3584,26 @@ void StateMenu::DrawBackground()
             by -= 272.0f/960.0f/6.0f;
         }*/
 
-       //Background with panorama
-       	bool background = true;
-	if (background == true)
-	{	
-		if (bx <= -515)
-		{
-			bx = 1020;
-		}
-		bx -= 1.0f / 6.0f;
+    // Background with panorama
+    bool background = true;
+    if (background == true)
+    {
+        if (bx <= -515)
+        {
+            bx = 1020;
+        }
+        bx -= 1.0f / 6.0f;
 
-		backgroundSprite->SetPosition(bx, 136);
-		backgroundSprite->DrawLinear();
-	}
+        backgroundSprite->SetPosition(bx, 136);
+        backgroundSprite->DrawLinear();
+    }
     sceGuDisable(GU_BLEND);
     sceGuEnable(GU_DEPTH_TEST);
 }
 
-void StateMenu::DrawButton(int posX, int posY, bool isSelected, const char *label)
-{
-    sceGuDisable(GU_DEPTH_TEST);
-    sceGuEnable(GU_BLEND);
-
-    buttonSprite->SetPosition(posX, posY);
-    buttonSprite->Draw();
-    buttonSprite->Scale(2, 2);
-    if (isSelected)
-    {
-        DrawText(posX, posY, GU_COLOR(1, 1, 0.25, 1), default_size, label);
-    }
-    else
-    {
-        DrawText(posX, posY, GU_COLOR(1, 1, 1, 1), default_size, label);
-    }
-
-    sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-}
-
-void StateMenu::DrawSButton(int posX, int posY, const char *label)
-{
-    sceGuDisable(GU_DEPTH_TEST);
-    sceGuEnable(GU_BLEND);
-
-    sbuttonSprite->SetPosition(posX, posY);
-    sbuttonSprite->Scale(2, 2);
-    sbuttonSprite->Draw();
-   
-    DrawText(posX, posY, GU_COLOR(1, 1, 1, 1), default_size, label);
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-}
-
-void StateMenu::DrawSmallButton(int posX, int posY, const char *label)
-{
-    sceGuDisable(GU_DEPTH_TEST);
-    sceGuEnable(GU_BLEND);
-
-    buttonSmallSprite->SetPosition(posX, posY);
-    buttonSmallSprite->Scale(2, 2);
-    buttonSmallSprite->Draw();
-   
-    DrawText(posX, posY, GU_COLOR(1, 1, 1, 1), default_size, label);
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-}
-
-void StateMenu::DrawSButtonSmall(int posX, int posY, const char *label)
-{
-    sceGuDisable(GU_DEPTH_TEST);
-    sceGuEnable(GU_BLEND);
-
-    sbuttonSmallSprite->SetPosition(posX, posY);
-    sbuttonSmallSprite->Scale(2, 2);
-    sbuttonSmallSprite->Draw();
-   
-    DrawText(posX, posY, GU_COLOR(1, 1, 1, 1), default_size, label);
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-}
-
-
-void StateMenu::DrawBackButton(int posX, int posY, bool isSelected, const char *label)
-{
-     sceGuDisable(GU_DEPTH_TEST);
-    sceGuEnable(GU_BLEND);
-
-    backSprite->SetPosition(posX, posY);
-    backSprite->Scale(2, 2);
-    backSprite->Draw();
-    if (isSelected)
-    {
-        DrawText(posX, posY, GU_COLOR(1, 1, 0.25, 1), default_size, label);
-    }
-    else
-    {
-        DrawText(posX, posY, GU_COLOR(1, 1, 1, 1), default_size, label);
-    }
-         sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-    
-}
-
 void StateMenu::DrawTextLabel(int posX, int posY, const char *label, bool isSelected = false)
 {
-         sceGuDisable(GU_DEPTH_TEST);
+    sceGuDisable(GU_DEPTH_TEST);
     sceGuEnable(GU_BLEND);
     if (isSelected)
     {
@@ -3902,8 +3614,101 @@ void StateMenu::DrawTextLabel(int posX, int posY, const char *label, bool isSele
         DrawText(posX, posY, GU_COLOR(1, 1, 1, 1), default_size, label);
     }
     sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
+    sceGuEnable(GU_DEPTH_TEST);
 }
+
+void StateMenu::DrawButton(posDrawBt drawBt,btScale btscale, bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    buttonSprite->SetPosition(drawBt.button.posX,drawBt.button.posY);
+    buttonSprite->Draw();
+    buttonSprite->Scale(btscale.X, btscale.Y);
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawSButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    sbuttonSprite->SetPosition(drawBt.button.posX, drawBt.button.posY);
+    sbuttonSprite->Scale(btscale.X, btscale.Y);
+    sbuttonSprite->Draw();
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawSmallButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    buttonSmallSprite->SetPosition(drawBt.button.posX,drawBt.button.posY);
+    buttonSmallSprite->Scale(btscale.X, btscale.Y);
+    buttonSmallSprite->Draw();
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawSButtonSmall(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    sbuttonSmallSprite->SetPosition(drawBt.button.posX,drawBt.button.posY);
+    sbuttonSmallSprite->Scale(btscale.X, btscale.Y);
+    sbuttonSmallSprite->Draw();
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawNButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    nbuttonSprite->SetPosition(drawBt.button.posX,drawBt.button.posY);
+    nbuttonSprite->Scale(btscale.X, btscale.Y);
+    nbuttonSprite->Draw();
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawNButtonSmall(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    nbuttonSmallSprite->SetPosition(drawBt.button.posX,drawBt.button.posY);
+    nbuttonSmallSprite->Scale(btscale.X, btscale.Y);
+    nbuttonSmallSprite->Draw();
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawBackButton(posDrawBt drawBt,btScale btscale, bool isSelected, const char *label)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+
+    backSprite->SetPosition(drawBt.button.posX, drawBt.button.posY);
+    backSprite->Scale(btscale.X, btscale.Y);
+    backSprite->Draw();
+    DrawTextLabel(drawBt.txt.posX,drawBt.txt.posY,label,isSelected);
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+
 
 void StateMenu::DrawMenuHeader(const char *header)
 {
@@ -3911,25 +3716,84 @@ void StateMenu::DrawMenuHeader(const char *header)
     sceGuEnable(GU_BLEND);
     DrawText(240, 29, GU_COLOR(1, 1, 1, 1), default_size, header);
     sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
+    sceGuEnable(GU_DEPTH_TEST);
 }
 
-void StateMenu::DrawMinecraft(int posX,int posY)
+void StateMenu::DrawMinecraft(int posX, int posY)
 {
     sceGuDisable(GU_DEPTH_TEST);
     sceGuEnable(GU_BLEND);
-    MinecraftSprite->SetPosition(posX,posY);
+    MinecraftSprite->SetPosition(posX, posY);
     MinecraftSprite->Draw();
     sceGuDisable(GU_BLEND);
-     sceGuEnable(GU_DEPTH_TEST);
+    sceGuEnable(GU_DEPTH_TEST);
 }
 
-void StateMenu::DrawSkin(int posX,int posY)
+void StateMenu::DrawSkin(int posX, int posY)
 {
     sceGuDisable(GU_DEPTH_TEST);
     sceGuEnable(GU_BLEND);
-    skinSprite->SetPosition(posX,posY);
+    skinSprite->SetPosition(posX, posY);
     skinSprite->Draw();
     sceGuDisable(GU_BLEND);
-     sceGuEnable(GU_DEPTH_TEST);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawLanguage(int posX, int posY)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+    lenguageSprite->SetPosition(posX, posY);
+    lenguageSprite->Draw();
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawSSkin(int posX, int posY)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+    sskinSprite->SetPosition(posX, posY);
+    sskinSprite->Draw();
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawSLanguage(int posX, int posY)
+{
+      sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+    slenguageSprite->SetPosition(posX, posY);
+    slenguageSprite->Draw();
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
+}
+
+void StateMenu::DrawSteve(stevePos pos)
+{
+    sceGuDisable(GU_DEPTH_TEST);
+    sceGuEnable(GU_BLEND);
+        steveHead->SetPosition(pos.head.posX,pos.head.posY);
+		steveHead->Draw();
+		
+		steveHeadCapa->SetPosition(pos.headCapa.posX,pos.headCapa.posY);
+		steveHeadCapa->Draw();
+		
+		steveBody->SetPosition(pos.body.posX,pos.body.posY);
+		steveBody->Draw();
+		
+		steveLeg->SetPosition(pos.leg1.posX,pos.leg1.posY);
+		steveLeg->Draw();
+		
+		steveLeg->SetPosition(pos.leg2.posX,pos.leg1.posY);
+		steveLeg->Draw();
+		
+		steveHand->SetPosition(pos.hand1.posX,pos.hand1.posY);
+		steveHand->Draw();
+		
+		steveHand->SetPosition(pos.hand2.posX,pos.hand2.posY);
+		steveHand->Draw();
+		
+    sceGuDisable(GU_BLEND);
+    sceGuEnable(GU_DEPTH_TEST);
 }

@@ -38,12 +38,75 @@
 
 //Inclusion de pantallas
 #include <Minecraft/Screens/InitMenu/InitMenu.h>
+#include <Minecraft/Screens/MainMenu/MainMenu.h>
 
 using namespace Aurora::Graphics;
 using namespace Aurora::Utils;
 using namespace Aurora::System;
 using namespace Aurora;
+
+#define PI 3.1415926535897f
 //Actuara como la clase base para todas las pantallas
+
+//Struct para ingresar en la posicion , cada posicion para
+//rendirar a steve
+struct steveHead {
+	int posX;
+	int posY;
+};
+struct steveHeadCapa {
+	int posX;
+	int posY;
+};
+struct steveBody {
+	int posX;
+	int posY;
+};
+struct steveLegBody0 {
+	int posX;
+	int posY;
+};
+struct steveLegBody1 {
+	int posX;
+	int posY;
+};
+struct steveHand0 {
+	int posX;
+	int posY;
+};
+struct steveHand1 {
+	int posX;
+	int posY;
+};
+struct  stevePos{
+	steveHead head;
+	steveHeadCapa headCapa;
+	steveBody body;
+	steveLegBody0 leg1;
+	steveLegBody1 leg2;
+	steveHand0 hand1;
+	steveHand1 hand2;
+};
+
+///Struct para posicion de boton, y posicion de texto
+struct posButton {
+	float posX;
+	float posY;
+};
+struct posText {
+	float posX;
+	float posY;
+};
+struct posDrawBt {
+	posButton button;
+	posText txt;
+};
+
+struct btScale {
+	int X;
+	int Y;
+};
+
 class SaveFile
 {
 public:
@@ -84,23 +147,24 @@ public:
 	void Update(StateManager* sManager);
 	void Draw(StateManager* sManager);
 
-	//Controls Independents for each screen d-pad,analog
-
-	
 	/*Draw independents for each screen*/
 
 	//DrawText
 	void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
 	//buttonSprite
-	void DrawButton(int posX, int posY, bool isSelected, const char* label); 
+	void DrawButton(posDrawBt drawBt,btScale btscale, bool isSelected, const char* label = ""); 
 	//sbuttonSprite
-	void DrawSButton(int posX, int posY, const char *label); 
+	void DrawSButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
 	//buttonSmallSprite
-	void DrawSmallButton(int posX, int posY, const char *label); 
+	void DrawSmallButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
 	//sbuttonSmallSprite
-	void DrawSButtonSmall(int posX, int posY, const char *label); 
+	void DrawSButtonSmall(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
+	//nbuttonSprite
+	void DrawNButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
+	//nbuttonSprite
+	void DrawNButtonSmall(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
 	//backSprite
-	void DrawBackButton(int posX, int posY, bool isSelected, const char* label);
+	void DrawBackButton(posDrawBt drawBt,btScale btscale, bool isSelected, const char* label = "");
 
 	void DrawTextLabel(int posX, int posY, const char* label, bool isSelected = false);
 	void DrawMenuHeader(const char* header);
@@ -110,7 +174,7 @@ public:
 	void DrawLanguage(int posX, int posY);
 	void DrawSSkin(int posX, int posY);
 	void DrawSLanguage(int posX, int posY);
-	void DrawSteve(int posX, int posY);
+	void DrawSteve(stevePos pos);
 
     Sprite *backgroundSprite;
     float bx, by;
@@ -172,7 +236,7 @@ public:
 	std::string lol;
 
     int converterPos;
-	//
+
 
     int SplashNumber;
     float splashSize;
@@ -244,6 +308,7 @@ private:
     unsigned int hash(const char* s, unsigned int seed);
 
 	InitMenu initMenu;
+	MainMenu mainMenu;
 
 private:
 

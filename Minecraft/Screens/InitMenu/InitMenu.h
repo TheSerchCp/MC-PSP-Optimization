@@ -40,8 +40,6 @@ using namespace Aurora::Utils;
 using namespace Aurora::System;
 using namespace Aurora;
 
-
-
 class InitMenu : public StateMenu
 {
 public:

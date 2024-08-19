@@ -40,13 +40,11 @@ using namespace Aurora::Utils;
 using namespace Aurora::System;
 using namespace Aurora;
 
-
-
 class MainMenu : public StateMenu
 {
 public:
     void Init();
-    void Draw() ;
+    void Draw();
 private:
     void LoadResources();
     void InitializeStateVariables();

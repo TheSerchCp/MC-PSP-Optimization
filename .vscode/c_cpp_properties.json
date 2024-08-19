@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:/pspsdk/psp/sdk/include",
-                "C:/pspsdk/psp/include"
+                "C:/pspsdk/psp/include",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}"
             ],
             "defines": [
                 "_DEBUG",
