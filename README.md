@@ -4,16 +4,16 @@
  - [ ] Restructuring MC-PSP Source Code
    - [ ] Restructure Mobs,Player,World
       - [ ] Restructure Mobs
-        - [ ]  Mob Logic
+        - [X]  Mob Logic
         - [ ]  Mob Modeling
       - [ ]  Restructure Player
-        - [ ]  Player logic
+        - [X]  Player logic
       - [ ] Restructure World
         - [ ] Chunk generation.
         - [ ] Perlin noise generation.
         - [ ] Extract World Functions from CraftWorld to other class.
       - [ ] Restructure Screens
-        - [ ] Splash
+        - [X] Splash
         - [ ] Main
         - [ ] Options
         - [ ] Textures
