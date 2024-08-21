@@ -1,4 +1,4 @@
-#include "Mobs.h"
+#include <Minecraft/Mobs/Mobs.h>
 
 Zombie::Zombie(float x, float y, float z) : LameMob(x, y, z)
 {

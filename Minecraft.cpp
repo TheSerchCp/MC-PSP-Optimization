@@ -8,7 +8,7 @@
 #include <Aurora/Graphics/Camera.h>
 #include <Aurora/Utils/StateManager.h>
 
-#include "Minecraft/StateMenu.h"
+#include "Minecraft/Screens/StateMenu.h"
 #include "Minecraft/Screens/Splash/SplashScreen.h"
 #include "Minecraft/SoundManager.h"
 #include "Minecraft/TextureHelper.h"

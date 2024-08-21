@@ -1,4 +1,4 @@
-#include "InitMenu.h"
+#include <Minecraft/Screens/InitMenu/InitMenu.h>
 #include <Minecraft/TextureHelper.h>
 #include <Aurora/Utils/StateManager.h>
 #include <Aurora/Utils/GameState.h>
@@ -46,8 +46,14 @@ void InitMenu::InitializeStateVariables()
 
 void InitMenu::Draw()
 {
+     // Definir la estructura para cada botón
+    posDrawBt button1Pos = {{240, 120}, {240, 129}};
+    posDrawBt button2Pos = {{240, 160}, {240, 169}};
+    posDrawBt selectButtonPos = {{240, static_cast<float>((selectPos * 40) + 120)}, {240, 24}};
+      // Definir la escala
+    btScale buttonScale = {2, 2};
     DrawBackground();
-    DrawButton({{240,120},{240,129}},{2,2},selectPos == 0,"English");
-    DrawButton({{240,160},{240,169}},{2,2},selectPos == 0,"Spanish");
-    DrawSButton({{240,static_cast<float>((selectPos * 40) + 120)},{240,24}},{2,2},selectPos == 3,"Select your Language");
+    DrawButton(button1Pos,buttonScale,selectPos == 0,"English");
+    DrawButton(button2Pos,buttonScale,selectPos == 0,"Spanish");
+    DrawSButton(selectButtonPos,buttonScale,selectPos == 3,"Select your Language");
 }

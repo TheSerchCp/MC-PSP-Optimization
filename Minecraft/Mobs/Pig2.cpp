@@ -1,4 +1,4 @@
-#include "Pig2.h"
+#include <Minecraft/Mobs/Pig2.h>
 #include <Aurora/Graphics/TextureManager.h>
 
 #define PI 3.14159f

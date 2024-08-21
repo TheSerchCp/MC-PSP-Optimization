@@ -1,4 +1,4 @@
-#include "StatePlayCreative.h"
+#include <Minecraft/Player/StatePlayCreative.h>
 #include <Minecraft/TextureHelper.h>
 
 #include <Minecraft/World/WorldGenerator.h>

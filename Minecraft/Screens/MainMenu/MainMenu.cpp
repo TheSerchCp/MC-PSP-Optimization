@@ -41,12 +41,12 @@ void MainMenu::LoadResources()
     slenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 24, 60, 12, 12);
     backgroundSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::panorama));
 
-    buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 0, 95, 12);        // stand
-    buttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 0, 95, 12);   // stand
-    buttonSmallSprite->Scale(0.45f,1.0f);
+    buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 0, 95, 12);      // stand
+    buttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 0, 95, 12); // stand
+    buttonSmallSprite->Scale(0.45f, 1.0f);
     sbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 12, 95, 12);      // stand selected
     sbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 12, 95, 12); // stand selected
-    sbuttonSmallSprite->Scale(0.45f,1.0f);
+    sbuttonSmallSprite->Scale(0.45f, 1.0f);
 
     ///*-----STEVE MODEL-----*///
     steveHead = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve), 8, 8, 8, 8);
@@ -67,14 +67,24 @@ void MainMenu::InitializeStateVariables()
 
 void MainMenu::Draw()
 {
+
     DrawBackground();
+    // Inicialización de las estructuras para los botones
+    posDrawBt playButtonPos = {{240, 110}, {240, 119}};
+    posDrawBt optionsButtonPos = {{240, 140}, {240, 149}};
+    posDrawBt aboutButtonPos = {{188, 170}, {188, 179}};
+    posDrawBt texturePackButtonPos = {{292, 170}, {292, 179}};
+    posDrawBt moreButtonPos = {{188, 200}, {188, 209}};
+    posDrawBt quitButtonPos = {{292, 200}, {292, 209}};
+    // Definir la escala
+    btScale buttonScale = {2, 2};
     DrawMinecraft(240, 40);
-    DrawButton({{240, 110}, {240, 119}},{2,2}, selectPos == 0, "Play");
-    DrawButton({{240, 140}, {240, 149}},{2,2}, selectPos == 0, "Options");
-    DrawSmallButton({{188, 170}, {188, 179}},{2,2}, selectPos == 0, "About");
-    DrawSmallButton({{292, 170}, {292, 179}},{2,2}, selectPos == 0, "Texture Pack");
-    DrawSmallButton({{188, 200}, {188, 209}},{2,2}, selectPos == 0, "More");
-    DrawSmallButton({{292, 200}, {292, 209}},{2,2},  selectPos == 0,"Quit");
+    DrawButton(playButtonPos, buttonScale, selectPos == 0, "Play");
+    DrawButton(optionsButtonPos, buttonScale, selectPos == 0, "Options");
+    DrawSmallButton(aboutButtonPos, buttonScale, selectPos == 0, "About");
+    DrawSmallButton(texturePackButtonPos, buttonScale, selectPos == 0, "Texture Pack");
+    DrawSmallButton(moreButtonPos, buttonScale, selectPos == 0, "More");
+    DrawSmallButton(quitButtonPos, buttonScale, selectPos == 0, "Quit");
     DrawSkin(130, 170);
     DrawLanguage(130, 200);
 
@@ -82,32 +92,71 @@ void MainMenu::Draw()
     switch (selectPos)
     {
     case 0:
-        DrawSButton({{240, 100}, {240, 119}},{2,2}, selectPos == 0, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Play" : "Jugar");
+    {
+        posDrawBt playButtonPos1 = {{240, 100}, {240, 119}};
+        DrawSButton(playButtonPos1, buttonScale, selectPos == 0, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Play" : "Jugar");
         break;
+    }
     case 1:
-        DrawSButton({{240, 140}, {240, 149}},{2,2}, selectPos == 1, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Options" : "Opciones");
+    {
+        posDrawBt playButtonPos2 = {{240, 140}, {240, 149}};
+        DrawSButton(playButtonPos2, buttonScale, selectPos == 1, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Options" : "Opciones");
         break;
+    }
+
     case 2:
-        DrawSButton({{188, 170}, {188, 179}},{2,2}, selectPos == 2, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "About" : "Sobre");
+    {
+        posDrawBt playButtonPos3 = {{188, 170}, {188, 179}};
+        DrawSButton(playButtonPos3, buttonScale, selectPos == 2, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "About" : "Sobre");
         break;
+    }
     case 3:
-        DrawSButton({{292, 170}, {292, 179}},{2,2}, selectPos == 3, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Textures" : "Texturas");
+    {
+        posDrawBt playButtonPos4 = {{292, 170}, {292, 179}};
+        DrawSButton(playButtonPos4, buttonScale, selectPos == 3, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Textures" : "Texturas");
         break;
+    }
     case 4:
-        DrawSButton({{188, 200}, {188, 209}},{2,2}, selectPos == 4, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "More" : "Más");
+    {
+        posDrawBt playButtonPos5 = {{188, 200}, {188, 209}};
+        DrawSButton(playButtonPos5, buttonScale, selectPos == 4, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "More" : "Más");
         break;
+    }
     case 5:
-        DrawSButton({{292, 200}, {292, 209}},{2,2}, selectPos == 5, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Quit" : "Salir");
+    {
+        posDrawBt playButtonPos6 = {{292, 200}, {292, 209}};
+        DrawSButton(playButtonPos6, buttonScale, selectPos == 5, RenderManager::InstancePtr()->GetFontLanguage() == ENGLISH ? "Quit" : "Salir");
         break;
+    }
     case 6:
+    {
         DrawSSkin(130, 170);
         break;
+    }
     default:
+    {
         DrawSLanguage(130, 200);
         break;
     }
+    }
     // Pintar a steve en posiciones correspondientes {head},{headCapa},{body},{leg1},{leg2},{hand1},{hand2}
-    DrawSteve({{366, 128}, {366, 128}, {366, 158}, {360, 194}, {372, 194}, {348, 158}, {384, 158}});
+    // Inicializar las estructuras relacionadas con "Steve"
+    stevePos steve;
+    steve.head.posX = 100;
+    steve.head.posY = 50;
+    steve.headCapa.posX = 100;
+    steve.headCapa.posY = 60;
+    steve.body.posX = 100;
+    steve.body.posY = 70;
+    steve.leg1.posX = 90;
+    steve.leg1.posY = 100;
+    steve.leg2.posX = 110;
+    steve.leg2.posY = 100;
+    steve.hand1.posX = 85;
+    steve.hand1.posY = 70;
+    steve.hand2.posX = 115;
+    steve.hand2.posY = 70;
+    DrawSteve(steve);
 
     // Splash
     splashSize += 0.13f;

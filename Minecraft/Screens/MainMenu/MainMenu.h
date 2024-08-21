@@ -2,10 +2,9 @@
 #define DRAWMAINMENU_H_
 
 #include <stdlib.h>
-
+#include <Minecraft/Screens/StateMenu.h>
 #include <Aurora/Utils/StateManager.h>
 #include <Aurora/Utils/GameState.h>
-#include <Minecraft/StateMenu.h>
 #include <Aurora/Graphics/RenderManager.h>
 #include <Aurora/Utils/Logger.h>
 #include <Aurora/Utils/Timer.h>

@@ -1,4 +1,3 @@
-
 #ifndef STATEPLAYCREATIVE_H_
 #define STATEPLAYCREATIVE_H_
 
@@ -36,7 +35,7 @@
 #include <Minecraft/Mobs/Sheep2.h>
 #include <Minecraft/LameMob.h>
 
-#include <Minecraft/StateMenu.h>
+#include <Minecraft/Screens/StateMenu.h>
 
 #include <Minecraft/CraftWorld2.h>
 #include <Minecraft/InputHelper.h>
