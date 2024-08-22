@@ -24,6 +24,7 @@ using namespace Aurora;
 
 void MainMenu::Init()
 {
+    Clean();
     LoadResources();
     InitializeStateVariables();
     bx = 240;
@@ -208,4 +209,22 @@ void MainMenu::Draw()
         DrawText(328, 66, GU_COLOR(1, 1, 0, 1), 0.35 + sinf(splashSize) * 0.02f, "RegenStudio = new Regen();");
         break;
     }
+}
+
+void MainMenu::Clean(){
+    delete MinecraftSprite;
+    delete skinSprite;
+    delete lenguageSprite;
+    delete sskinSprite;
+    delete slenguageSprite;
+    delete backgroundSprite;
+    delete buttonSprite;
+    delete buttonSmallSprite;
+    delete sbuttonSprite;
+    delete sbuttonSmallSprite;
+    delete steveHead;
+    delete steveHeadCapa;
+    delete steveBody;
+    delete steveHand;
+    delete steveLeg;
 }

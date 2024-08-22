@@ -49,6 +49,7 @@ public:
 private:
     void LoadResources();
     void InitializeStateVariables();
+    void Clean();
    
 };
 

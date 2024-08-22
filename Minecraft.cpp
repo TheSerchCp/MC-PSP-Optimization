@@ -21,7 +21,6 @@ using namespace Aurora;
 PSP_MODULE_INFO("Tutorial1", 0, 1, 1);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU|THREAD_ATTR_USER);
 PSP_HEAP_SIZE_KB(-1024);
-
 int main()
 {
 	SetupCallbacks();
@@ -52,12 +51,14 @@ int main()
 	SplashScreen *screen = new SplashScreen(TextureHelper::Instance()->GetTexture(TextureHelper::Genesis),0,0,480,272,3);
 	screen->ShowSplash();
 	delete screen;
-
+	Utils::Logger::Instance()->LogMessage("Se cargo el splash");
 	RenderManager::InstancePtr()->SetClearColour(0xFFFFFFFF);
 
 	//new active state
 	StateMenu *statePlay = new StateMenu();
+	Utils::Logger::Instance()->LogMessage("Se comienza carga de menu");
 	statePlay->Init();
+	Utils::Logger::Instance()->LogMessage("Se inicializiza menu");
 	stateManager.ChangeState(statePlay);
 
 	//trun

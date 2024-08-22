@@ -19,6 +19,10 @@
 
 #include <Minecraft/Screens/InitMenu/InitMenu.h>
 #include <Minecraft/Screens/MainMenu/MainMenu.h>
+#include <Minecraft/Screens/MainMenu/CreateWorldMenu/WorldMenu.h>
+#include <Minecraft/Screens/MainMenu/AboutMenu/AboutMenu.h>
+#include <Minecraft/Screens/MainMenu/UpdateMenu/UpdateMenu.h>
+#include <Minecraft/Screens/MainMenu/AboutMenu/AboutConverterMenu.h>
 
 #define ENGLISH 1
 #define SPANISH 2
@@ -32,8 +36,12 @@ using namespace Aurora::Utils;
 using namespace Aurora::System;
 using namespace Aurora;
 
-MainMenu mainMenu;
 InitMenu initMenu;
+MainMenu mainMenu;
+WorldMenu worldMenu;
+AboutMenu aboutMenu;
+UpdateMenu updateMenu;
+AboutConverterMenu aboutConverterMenu;
 
 StateMenu::StateMenu()
 {
@@ -45,7 +53,7 @@ StateMenu::~StateMenu()
 
 void StateMenu::Init()
 {
-    
+    CleanUp();
    newW_width = 0;
     newW_height = 0;
     newW_length = 0;
@@ -100,11 +108,6 @@ void StateMenu::Init()
     mainOptions.guiDrawing = 1;
 	mainOptions.buttonsDrawing = 1;
 
-     // Initialize screens draw
-
-    initMenu.Init();
-    mainMenu.Init();
-
     //set render manager instance
     mRender = RenderManager::InstancePtr();
     mSystemMgr = SystemManager::Instance();
@@ -114,16 +117,18 @@ void StateMenu::Init()
     logoSprite->Scale(1.5f,1.5f);
     logoSprite->SetPosition(240,50);
 
-    backgroundSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::background));
-    backgroundSprite->Scale(2,2);
-    backgroundSprite->SetPosition(240,136);
+    buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,0,95,12); // stand
+    buttonSprite->SetPosition(240,150);
+    buttonSprite->Scale(2,2);
 
-    bx = 240;
-    by = 136;
-    directionx = rand() % 2;
-    directiony = rand() % 2;
+    backSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Dirt),0,0,32,32);
+    backSprite->Scale(2,2);
 
-    rectFilledSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Rectangles),0,0,230,37);
+    sbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,12,95,12); // stand selected
+    sbuttonSprite->SetPosition(240,150);
+    sbuttonSprite->Scale(2,2);
+
+     rectFilledSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Rectangles),0,0,230,37);
     rectFilledSprite->SetPosition(240,150);
     rectFilledSprite->Scale(2,2);
 
@@ -131,94 +136,12 @@ void StateMenu::Init()
     rectEmptySprite->SetPosition(240,150);
     rectEmptySprite->Scale(2,2);
 
-    buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,0,95,12); // stand
-    buttonSprite->SetPosition(240,150);
-    buttonSprite->Scale(2,2);
-	
-	//menu
-	menuSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::World),0,0,64,64);
-    menuSprite->Scale(0.6,0.6);
+    bx = 240;
+    by = 136;
+    directionx = rand() % 2;
+    directiony = rand() % 2;
 
-	smenuSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::DeselectedWorld),0,0,64,64);
-    smenuSprite->Scale(0.6,0.6);
-
-    sbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,12,95,12); // stand selected
-    sbuttonSprite->SetPosition(240,150);
-    sbuttonSprite->Scale(2,2);
-
-    nbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,24,95,12); // dark
-    nbuttonSprite->SetPosition(240,150);
-    nbuttonSprite->Scale(2,2);
-
-    // small buttons
-    buttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,0,95,12); // stand
-    buttonSmallSprite->SetPosition(240,150);
-    buttonSmallSprite->Scale(0.45f,1.0f);
-    buttonSmallSprite->Scale(2,2);
-
-    sbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,12,95,12); // stand selected
-    sbuttonSmallSprite->SetPosition(240,150);
-    sbuttonSmallSprite->Scale(0.45f,1.0f);
-    sbuttonSmallSprite->Scale(2,2);
-
-    nbuttonSmallSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,24,95,12); // dark
-    nbuttonSmallSprite->SetPosition(240,150);
-    nbuttonSmallSprite->Scale(0.45f,1.0f);
-    nbuttonSmallSprite->Scale(2,2);
-	
-    mbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,36,95,12); // gray
-    mbuttonSprite->SetPosition(240,150);
-    mbuttonSprite->Scale(2,2);
-
-    smbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,48,95,12); // gray selected
-    smbuttonSprite->SetPosition(240,150);
-    smbuttonSprite->Scale(2,2);
-
-    backSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Dirt),0,0,32,32);
-    backSprite->Scale(2,2);
-	
-	lenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),12,60,12,12);
-	lenguageSprite->SetPosition(0,0);
-	lenguageSprite->Scale(2,2);
-	
-	slenguageSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),24,60,12,12);
-	slenguageSprite->SetPosition(0,0);
-	slenguageSprite->Scale(2,2);
-	
-	skinSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),36,60,12,12);
-	skinSprite->SetPosition(0,0);
-	skinSprite->Scale(2,2);
-	
-	sskinSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),48,60,12,12);
-	sskinSprite->SetPosition(0,0);
-	sskinSprite->Scale(2,2);
-
-    MinecraftSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Minecraft),0,0,320,90);
-    MinecraftSprite->SetPosition(240,50);
-    MinecraftSprite->Scale(0.85,0.85);
-
-    blackBackground = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),87,60,8,8);
-    blackBackground->SetPosition(240,116);
-    blackBackground->Scale(60,22);
-	
-	///*-----STEVE MODEL-----*///
-	
-	steveHead = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),8,8,8,8);
-	steveHead->Scale(3,3);
-	
-	steveHeadCapa = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),40,8,8,8);
-	steveHeadCapa->Scale(3,3);
-	
-	steveBody = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),20,20,8,12);
-	steveBody->Scale(3,3);
-	
-	steveHand = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),44,20,4,12);
-	steveHand->Scale(3,3);
-	
-	steveLeg = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Steve),4,20,4,12);
-	steveLeg->Scale(3,3);
-	
-	///*-----END-----*///
+   
 
     selectPos = 0;
 
@@ -278,6 +201,14 @@ void StateMenu::Init()
 	{
 	    worldName[i] = ' ';
 	}
+
+    initMenu.Init();
+    mainMenu.Init();
+    worldMenu.Init();
+    aboutMenu.Init();
+    updateMenu.Init();
+    aboutConverterMenu.Init();
+    
 }
 
 void StateMenu::Enter()
@@ -2336,490 +2267,19 @@ void StateMenu::Draw(StateManager *sManager)
     break;
     case 1: // select world
     {
-        sceGuDisable(GU_DEPTH_TEST);
-        sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1, 1, 1, 1.0f));
-
-        for (int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 5; y++)
-            {
-                backSprite->SetPosition(x * 64, y * 64);
-                backSprite->Draw();
-            }
-        }
-
-        if (saveSubmenu) // delete world
-        {
-            buttonSprite->SetPosition(240, 235);
-            buttonSprite->Draw();
-
-            buttonSprite->SetPosition(240, 260);
-            buttonSprite->Draw();
-        }
-        else
-        {
-            /// left part
-            if (saveFilesList.empty() == false)
-            {
-                buttonSprite->SetPosition(120, 222); // play selected world
-                buttonSprite->Draw();
-
-                buttonSmallSprite->SetPosition(67.75, 255); // rename
-                buttonSmallSprite->Draw();
-
-                buttonSmallSprite->SetPosition(172.25, 255); // delete
-                buttonSmallSprite->Draw();
-            }
-            else
-            {
-                nbuttonSprite->SetPosition(120, 222); // play selected world
-                nbuttonSprite->Draw();
-
-                nbuttonSmallSprite->SetPosition(67.75, 255); // rename
-                nbuttonSmallSprite->Draw();
-
-                nbuttonSmallSprite->SetPosition(172.25, 255); // delete
-                nbuttonSmallSprite->Draw();
-            }
-
-            /// right part
-            buttonSprite->SetPosition(360, 222); // create new world
-            buttonSprite->Draw();
-
-            buttonSprite->SetPosition(360, 255); // cancel
-            buttonSprite->Draw();
-        }
-
-        bool smallButton = false;
-        if (saveSubmenu)
-        {
-            sbuttonSprite->SetPosition(240, (saveSubMenuSelect * 25) + 210);
-        }
-        else
-        {
-            switch (loadSelectPos)
-            {
-            case 0:
-                sbuttonSprite->SetPosition(120, 222);
-                break;
-            case 1:
-                sbuttonSmallSprite->SetPosition(67.75, 255);
-                smallButton = true;
-                break;
-            case 2:
-                sbuttonSmallSprite->SetPosition(172.25, 255);
-                smallButton = true;
-                break;
-            case 3:
-                sbuttonSprite->SetPosition(360, 222);
-                break;
-            case 4:
-                sbuttonSprite->SetPosition(360, 255);
-                break;
-            }
-        }
-        smallButton == true ? sbuttonSmallSprite->Draw() : sbuttonSprite->Draw();
-
-        blackBackground->Draw();
-
-        if (saveFilesList.size() > 0)
-        {
-            for (int i = loadSaveStart; i < loadSaveMax; i++)
-            {
-                smenuSprite->SetPosition(46, 56 + (i * 41) - (loadSaveStart * 41)); // menu
-                smenuSprite->Draw();
-            }
-        }
-
-        // select sprite
-        if (saveFilesList.size() > 0)
-        {
-            // save files
-            for (int i = loadSaveStart; i < loadSaveMax; i++)
-            {
-                if (loadSavePos == i)
-                {
-                    mRender->SetFont(ENGLISH);
-
-                    if (saveFilesList[i].worldName[0] != '\0')
-                    {
-                        mRender->SetFontStyle(0.6f, GU_COLOR(1, 1, 0, 1), 0, 0x00000000);
-                        mRender->DebugPrint(70, 54 + (i * 41) - (loadSaveStart * 41), "%s", saveFilesList[i].worldName);
-
-                        menuSprite->SetPosition(46, 56 + (i * 41) - (loadSaveStart * 41)); // menu
-                        menuSprite->Draw();
-                    }
-                    else
-                    {
-                        mRender->SetFontStyle(0.6f, GU_COLOR(0.6, 0.6, 0, 1), 0, 0x00000000);
-                        mRender->DebugPrint(70, 54 + (i * 41) - (loadSaveStart * 41), "<no name>");
-                    }
-
-                    mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                    mRender->DebugPrint(70, 66 + (i * 41) - (loadSaveStart * 41), "%s", saveFilesList[i].fileName.c_str());
-
-                    mRender->SetDefaultFont();
-
-                    if (mRender->GetFontLanguage() == ENGLISH)
-                    {
-                        switch (saveFilesList[i].worldGameMode)
-                        {
-                        case 0:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Survival mode (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 1:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Creative mode (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 2:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Hardcore mode (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        }
-                    }
-                    if (mRender->GetFontLanguage() == SPANISH)
-                    {
-                        switch (saveFilesList[i].worldGameMode)
-                        {
-                        case 0:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Modo survival (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 1:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Modo creativo (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 2:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Modo hardcore (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    mRender->SetFont(ENGLISH);
-
-                    if (saveFilesList[i].worldName[0] != '\0')
-
-                    {
-                        mRender->SetFontStyle(0.6f, GU_COLOR(1, 1, 1, 1), 0, 0x00000000);
-                        mRender->DebugPrint(70, 54 + (i * 41) - (loadSaveStart * 41), "%s", saveFilesList[i].worldName);
-                    }
-                    else
-                    {
-                        mRender->SetFontStyle(0.6f, GU_COLOR(0.6, 0.6, 0.6, 1), 0, 0x00000000);
-                        mRender->DebugPrint(70, 54 + (i * 41) - (loadSaveStart * 41), "<no name>");
-                    }
-
-                    mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                    mRender->DebugPrint(70, 66 + (i * 41) - (loadSaveStart * 41), "%s", saveFilesList[i].fileName.c_str());
-
-                    mRender->SetDefaultFont();
-
-                    if (mRender->GetFontLanguage() == ENGLISH)
-                    {
-                        switch (saveFilesList[i].worldGameMode)
-                        {
-                        case 0:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Survival mode (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 1:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Creative mode (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 2:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Hardcore mode (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        }
-                    }
-
-                    if (mRender->GetFontLanguage() == SPANISH)
-                    {
-                        switch (saveFilesList[i].worldGameMode)
-                        {
-                        case 0:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Modo survival (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 1:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Modo creativo (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        case 2:
-                            mRender->SetFontStyle(0.4f, GU_COLOR(0.5, 0.5, 0.5, 1), 0, 0x00000000);
-                            mRender->DebugPrint(70, 78 + (i * 41) - (loadSaveStart * 41), "Modo hardcore (%i KB)", saveFilesList[i].saveSize / 1024);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-
-        if (mRender->GetFontLanguage() == ENGLISH)
-        {
-            if (saveSubmenu)
-            {
-                saveSubMenuSelect == 0 ? DrawText(240, 219, GU_COLOR(1, 1, 0.25, 1), default_size, "Are you sure?") : DrawText(240, 219, GU_COLOR(1, 1, 1, 1), default_size, "Are you sure?");
-                saveSubMenuSelect == 1 ? DrawText(240, 244, GU_COLOR(1, 1, 0.25, 1), default_size, "Yes") : DrawText(240, 244, GU_COLOR(1, 1, 1, 1), default_size, "Yes");
-                saveSubMenuSelect == 2 ? DrawText(240, 269, GU_COLOR(1, 1, 0.25, 1), default_size, "No") : DrawText(240, 269, GU_COLOR(1, 1, 1, 1), default_size, "No");
-            }
-            else
-            {
-                float buttonTextColor = 1.0f; // for left part
-                if (saveFilesList.empty() == true)
-                {
-                    buttonTextColor = 0.5f;
-                }
-
-                loadSelectPos == 0 ? DrawText(120, 231, GU_COLOR(1, 1, 0.25, 1), default_size, "Play Selected World") : DrawText(120, 231, GU_COLOR(buttonTextColor, buttonTextColor, buttonTextColor, 1), default_size, "Play Selected World");
-                loadSelectPos == 1 ? DrawText(67.75f, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Rename") : DrawText(67.75f, 264, GU_COLOR(buttonTextColor, buttonTextColor, buttonTextColor, 1), default_size, "Rename");
-                loadSelectPos == 2 ? DrawText(172.25f, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Delete") : DrawText(172.25f, 264, GU_COLOR(buttonTextColor, buttonTextColor, buttonTextColor, 1), default_size, "Delete");
-                loadSelectPos == 3 ? DrawText(360, 231, GU_COLOR(1, 1, 0.25, 1), default_size, "Create New World") : DrawText(360, 231, GU_COLOR(1.0f, 1.0f, 1.0f, 1), default_size, "Create New World");
-                loadSelectPos == 4 ? DrawText(360, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Cancel") : DrawText(360, 264, GU_COLOR(1.0f, 1.0f, 1.0f, 1), default_size, "Cancel");
-            }
-            DrawText(240, 24, GU_COLOR(1, 1, 1, 1), default_size, "Select World");
-        }
-
-        if (mRender->GetFontLanguage() == SPANISH)
-        {
-            if (saveSubmenu)
-            {
-                saveSubMenuSelect == 0 ? DrawText(240, 219, GU_COLOR(1, 1, 0.25, 1), default_size, "Estas seguro?") : DrawText(240, 219, GU_COLOR(1, 1, 1, 1), default_size, "Estas seguro?");
-                saveSubMenuSelect == 1 ? DrawText(240, 244, GU_COLOR(1, 1, 0.25, 1), default_size, "Si") : DrawText(240, 244, GU_COLOR(1, 1, 1, 1), default_size, "Si");
-                saveSubMenuSelect == 2 ? DrawText(240, 269, GU_COLOR(1, 1, 0.25, 1), default_size, "No") : DrawText(240, 269, GU_COLOR(1, 1, 1, 1), default_size, "No");
-            }
-            else
-            {
-                float buttonTextColor = 1.0f; // for left part
-                if (saveFilesList.empty() == true)
-                {
-                    buttonTextColor = 0.5f;
-                }
-
-                loadSelectPos == 0 ? DrawText(120, 231, GU_COLOR(1, 1, 0.25, 1), default_size, "Jugar Mundo") : DrawText(120, 231, GU_COLOR(buttonTextColor, buttonTextColor, buttonTextColor, 1), default_size, "Jugar Mundo");
-                loadSelectPos == 1 ? DrawText(67.75f, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Renombrar") : DrawText(67.75f, 264, GU_COLOR(buttonTextColor, buttonTextColor, buttonTextColor, 1), default_size, "Renombrar");
-                loadSelectPos == 2 ? DrawText(172.25f, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Borrar") : DrawText(172.25f, 264, GU_COLOR(buttonTextColor, buttonTextColor, buttonTextColor, 1), default_size, "Borrar");
-                loadSelectPos == 3 ? DrawText(360, 231, GU_COLOR(1, 1, 0.25, 1), default_size, "Crear nuevo mundo") : DrawText(360, 231, GU_COLOR(1.0f, 1.0f, 1.0f, 1), default_size, "Crear nuevo mundo");
-                loadSelectPos == 4 ? DrawText(360, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Regresar") : DrawText(360, 264, GU_COLOR(1.0f, 1.0f, 1.0f, 1), default_size, "Regresar");
-            }
-            DrawText(240, 24, GU_COLOR(1, 1, 1, 1), default_size, "Seleccionar Mundo");
-        }
+      worldMenu.Draw();
     }
     break;
     case 3: // about
     {
-
-        sceGuDisable(GU_DEPTH_TEST);
-        sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1, 1, 1, 1.0f));
-
-        for (int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 5; y++)
-            {
-                backSprite->SetPosition(x * 64, y * 64);
-                backSprite->Draw();
-            }
-        }
-
-        // check for update
-        buttonSprite->SetPosition(240, 225);
-        buttonSprite->Draw();
-
-        buttonSprite->SetPosition(240, 255);
-        buttonSprite->Draw();
-
-        // back
-        sbuttonSprite->SetPosition(240, (aboutPos * 30) + 225);
-        sbuttonSprite->Draw();
-
-        blackBackground->Draw();
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-
-        if (mRender->GetFontLanguage() == ENGLISH)
-        {
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 100 - 40, "Developer  :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 100 - 40, "Wandemberg Armijos(RegenStudio)");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 120 - 40, "Past Modder:");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 120 - 40, "Kirill Skibin(Woolio)");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 140 - 40, "Created By :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 140 - 40, "Marcin Ploska(Drakon)");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 180 - 40, "Website:");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 180 - 40, "vk.com/mine_psp_game");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 200 - 40, "Donate :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 200 - 40, "Paypal.me/Mikegaming210");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 220 - 40, "Version:");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 220 - 40, "Minecraft PSP BETA");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 240 - 40, "Stage  :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 240 - 40, "Under Development");
-
-            aboutPos == 0 ? DrawText(240, 234, GU_COLOR(1, 1, 0.25, 1), default_size, "Converter") : DrawText(240, 234, GU_COLOR(1, 1, 1, 1), default_size, "Converter");
-            aboutPos == 1 ? DrawText(240, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Cancel") : DrawText(240, 264, GU_COLOR(1, 1, 1, 1), default_size, "Cancel");
-            DrawText(240, 19, GU_COLOR(1, 1, 1, 1), default_size, "About");
-        }
-        if (mRender->GetFontLanguage() == SPANISH)
-        {
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 100 - 40, "Desarrollador:");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 100 - 40, "Wandemberg Armijos(RegenStudio)");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 120 - 40, "Past Modder  :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 120 - 40, "Kirill Skibin(Woolio)");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 140 - 40, "Creador por  :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 140 - 40, "Marcin Ploska(Drakon)");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 180 - 40, "SitioWeb:");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 180 - 40, "vk.com/mine_psp_game");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 200 - 40, "Donacion:");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 200 - 40, "Paypal.me/Mikegaming210");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 220 - 40, "Version :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 220 - 40, "Minecraft PSP v3.3.0");
-
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000000);
-            mRender->DebugPrint(40, 240 - 40, "Estado  :");
-            mRender->SetFontStyle(0.5, GU_COLOR(1, 1, 1, 1), 2, 0x00000400);
-            mRender->DebugPrint(440, 240 - 40, "Bajo Desarrollo");
-
-            aboutPos == 0 ? DrawText(240, 234, GU_COLOR(1, 1, 0.25, 1), default_size, "Convertidor") : DrawText(240, 234, GU_COLOR(1, 1, 1, 1), default_size, "Convertidor");
-            aboutPos == 1 ? DrawText(240, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Regresar") : DrawText(240, 264, GU_COLOR(1, 1, 1, 1), default_size, "Regresar");
-            DrawText(240, 19, GU_COLOR(1, 1, 1, 1), default_size, "Sobre");
-        }
+       aboutMenu.Draw();
     }
     break;
-
     case 4: // update info
     {
-
-        sceGuDisable(GU_DEPTH_TEST);
-        sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1, 1, 1, 1.0f));
-
-        for (int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 5; y++)
-            {
-                backSprite->SetPosition(x * 64, y * 64);
-                backSprite->Draw();
-            }
-        }
-
-        // check for update
-        buttonSprite->SetPosition(240, 225);
-        buttonSprite->Draw();
-
-        buttonSprite->SetPosition(240, 255);
-        buttonSprite->Draw();
-
-        // back
-        sbuttonSprite->SetPosition(240, (donatePos * 30) + 225);
-        sbuttonSprite->Draw();
-
-        blackBackground->Draw();
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-
-        if (mRender->GetFontLanguage() == ENGLISH)
-        {
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 80 - 40, "-Clouds 3D");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 90 - 40, "-Fixed some bugs");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 100 - 40, "-Fixed world generation");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 110 - 40, "-Legacy Inventory");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 120 - 40, "-Spanish lenguage updated");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 130 - 40, "-Fix XP number system");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 140 - 40, "-New font");
-
-            donatePos == 0 ? DrawText(240, 234, GU_COLOR(1, 1, 0.25, 1), default_size, "Nothing Here") : DrawText(240, 234, GU_COLOR(1, 1, 1, 1), default_size, "Nothing Here");
-            donatePos == 1 ? DrawText(240, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Cancel") : DrawText(240, 264, GU_COLOR(1, 1, 1, 1), default_size, "Cancel");
-            DrawText(240, 20, GU_COLOR(1, 1, 1, 1), default_size, "Whats new?!");
-        }
-        if (mRender->GetFontLanguage() == SPANISH)
-        {
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 80 - 40, "-Clouds 3D");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 90 - 40, "-Fixed some bugs");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 100 - 40, "-Fixed world generation");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 110 - 40, "-Legacy Inventory");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 120 - 40, "-Spanish lenguage updated");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 130 - 40, "-Fix XP number system");
-
-            mRender->SetFontStyle(0.36, GU_COLOR(1, 1, 1, 1), 1, 0x00000000);
-            mRender->DebugPrint(30, 140 - 40, "-New font");
-
-            donatePos == 0 ? DrawText(240, 234, GU_COLOR(1, 1, 0.25, 1), default_size, "Como jugar") : DrawText(240, 234, GU_COLOR(1, 1, 1, 1), default_size, "Como jugar");
-            donatePos == 1 ? DrawText(240, 264, GU_COLOR(1, 1, 0.25, 1), default_size, "Regresar") : DrawText(240, 264, GU_COLOR(1, 1, 1, 1), default_size, "Regresar");
-            DrawText(240, 20, GU_COLOR(1, 1, 1, 1), default_size, "Novedades!");
-        }
+       updateMenu.Draw();
     }
     break;
-
     case 5: // paramateric view
     {
 
@@ -3028,139 +2488,7 @@ void StateMenu::Draw(StateManager *sManager)
     break;
     case 6: // about
     {
-
-        sceGuDisable(GU_DEPTH_TEST);
-        sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1, 1, 1, 1.0f));
-
-        for (int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 5; y++)
-            {
-                backSprite->SetPosition(x * 64, y * 64);
-                backSprite->Draw();
-            }
-        }
-
-        // check for update
-        buttonSprite->SetPosition(240, 130);
-        buttonSprite->Draw();
-
-        buttonSprite->SetPosition(240, 165);
-        buttonSprite->Draw();
-
-        buttonSprite->SetPosition(240, 200);
-        buttonSprite->Draw();
-
-        buttonSprite->SetPosition(240, 245);
-        buttonSprite->Draw();
-
-        // back	//cuevas
-        int y_pos = 130;
-        if (converterPos == 1)
-        {
-            y_pos = 165;
-        }
-        if (converterPos == 2)
-        {
-            y_pos = 200;
-        }
-        if (converterPos == 3)
-        {
-            y_pos = 245;
-        }
-        sbuttonSprite->SetPosition(240, y_pos);
-        sbuttonSprite->Draw();
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-
-        if (mRender->GetFontLanguage() == ENGLISH)
-        {
-            if (schematicExists)
-            {
-                DrawText(240, 60, GU_COLOR(0.1, 0.9, 0.1, 1), default_size, "world.schematic exists!");
-            }
-            else
-            {
-                DrawText(240, 60, GU_COLOR(0.9, 0.1, 0.1, 1), default_size, "world.schematic doesn't exist!");
-            }
-            if (errorType == 1)
-            {
-                DrawText(240, 80, GU_COLOR(0.9, 0.1, 0.1, 1), default_size, "invalid schematic size");
-            }
-            else
-            {
-                DrawText(240, 80, GU_COLOR(0.9, 0.1, 0.1, 1), default_size, "process of conversion can take about 1 minute");
-            }
-
-            if (newW_deleteCaves == true)
-            {
-                DrawText(240, 114, GU_COLOR(0.5, 0.5, 0.5, 1), 0.35, "recommended for optimizing normal maps");
-                converterPos == 0 ? DrawText(240, 139, GU_COLOR(1, 1, 0.25, 1), default_size, "Clean caves: Enabled") : DrawText(240, 139, GU_COLOR(1, 1, 1, 1), default_size, "Clean caves: Enabled");
-            }
-            if (newW_deleteCaves == false)
-            {
-                DrawText(240, 114, GU_COLOR(0.5, 0.5, 0.5, 1), 0.35, "recommended for competitive maps [skywars, uhc, etc]");
-                converterPos == 0 ? DrawText(240, 139, GU_COLOR(1, 1, 0.25, 1), default_size, "Clean caves: Disable") : DrawText(240, 139, GU_COLOR(1, 1, 1, 1), default_size, "Clean caves: Disable");
-            }
-
-            if (newW_gameMode == SURVIVAL)
-            {
-                converterPos == 1 ? DrawText(240, 174, GU_COLOR(1, 1, 0.25, 1), default_size, "Game Mode: Survival") : DrawText(240, 174, GU_COLOR(1, 1, 1, 1), default_size, "Game Mode: Survival");
-            }
-            if (newW_gameMode == CREATIVE)
-            {
-                converterPos == 1 ? DrawText(240, 174, GU_COLOR(1, 1, 0.25, 1), default_size, "Game Mode: Creative") : DrawText(240, 174, GU_COLOR(1, 1, 1, 1), default_size, "Game Mode: Creative");
-            }
-            converterPos == 2 ? DrawText(240, 209, GU_COLOR(1, 1, 0.25, 1), default_size, "Try to convert") : DrawText(240, 209, GU_COLOR(1, 1, 1, 1), default_size, "Try to convert");
-            converterPos == 3 ? DrawText(240, 254, GU_COLOR(1, 1, 0.25, 1), default_size, "Cancel") : DrawText(240, 254, GU_COLOR(1, 1, 1, 1), default_size, "Cancel");
-
-            DrawText(240, 29, GU_COLOR(1, 1, 1, 1), default_size, "Converter");
-        }
-        if (mRender->GetFontLanguage() == SPANISH)
-        {
-            if (schematicExists)
-            {
-                DrawText(240, 60, GU_COLOR(0.1, 0.9, 0.1, 1), default_size, "world.schematic existe!");
-            }
-            else
-            {
-                DrawText(240, 60, GU_COLOR(0.9, 0.1, 0.1, 1), default_size, "world.schematic no existe!");
-            }
-            if (errorType == 1)
-            {
-                DrawText(240, 80, GU_COLOR(0.9, 0.1, 0.1, 1), default_size, "Tamano de schematic no compatible");
-            }
-            else
-            {
-                DrawText(240, 80, GU_COLOR(0.9, 0.1, 0.1, 1), default_size, "el proceso de conversion puede durar 1 minuto!");
-            }
-
-            if (newW_deleteCaves == true)
-            {
-                DrawText(240, 114, GU_COLOR(0.5, 0.5, 0.5, 1), 0.35, "recomendado para optimizar mapas normales");
-                converterPos == 0 ? DrawText(240, 139, GU_COLOR(1, 1, 0.25, 1), default_size, "Cuevas: Enabled") : DrawText(240, 139, GU_COLOR(1, 1, 1, 1), default_size, "Cuevas: Enabled");
-            }
-            if (newW_deleteCaves == false)
-            {
-                DrawText(240, 114, GU_COLOR(0.5, 0.5, 0.5, 1), 0.35, "recomendado para mapas competitivos [skywars, uhc, etc]");
-                converterPos == 0 ? DrawText(240, 139, GU_COLOR(1, 1, 0.25, 1), default_size, "Cuevas: Disable") : DrawText(240, 139, GU_COLOR(1, 1, 1, 1), default_size, "Cuevas: Disable");
-            }
-
-            if (newW_gameMode == SURVIVAL)
-            {
-                converterPos == 1 ? DrawText(240, 174, GU_COLOR(1, 1, 0.25, 1), default_size, "Game Mode: Survival") : DrawText(240, 174, GU_COLOR(1, 1, 1, 1), default_size, "Game Mode: Survival");
-            }
-            if (newW_gameMode == CREATIVE)
-            {
-                converterPos == 1 ? DrawText(240, 174, GU_COLOR(1, 1, 0.25, 1), default_size, "Game Mode: Creativo") : DrawText(240, 174, GU_COLOR(1, 1, 1, 1), default_size, "Game Mode: Creativo");
-            }
-            converterPos == 2 ? DrawText(240, 209, GU_COLOR(1, 1, 0.25, 1), default_size, "Convertir") : DrawText(240, 209, GU_COLOR(1, 1, 1, 1), default_size, "Convertir");
-            converterPos == 3 ? DrawText(240, 254, GU_COLOR(1, 1, 0.25, 1), default_size, "Regresar") : DrawText(240, 254, GU_COLOR(1, 1, 1, 1), default_size, "Regresar");
-
-            DrawText(240, 29, GU_COLOR(1, 1, 1, 1), default_size, "Convertidor");
-        }
+        aboutConverterMenu.Draw();
     }
     break;
     case 7: // player options

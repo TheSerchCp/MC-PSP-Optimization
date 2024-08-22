@@ -22,6 +22,7 @@ using namespace Aurora;
 
 void InitMenu::Init()
 {
+    Clean();
     LoadResources();
     InitializeStateVariables();
 }
@@ -56,4 +57,10 @@ void InitMenu::Draw()
     DrawButton(button1Pos,buttonScale,selectPos == 0,"English");
     DrawButton(button2Pos,buttonScale,selectPos == 0,"Spanish");
     DrawSButton(selectButtonPos,buttonScale,selectPos == 3,"Select your Language");
+}
+
+void InitMenu::Clean(){
+    delete buttonSprite;
+    delete sbuttonSprite;
+    delete backSprite;
 }

@@ -5,7 +5,7 @@
 
 #include <include/Aurora/Utils/StateManager.h>
 #include <Aurora/Utils/GameState.h>
-#include <Minecraft/StateMenu.h>
+#include <Minecraft/Screens/StateMenu.h>
 #include <Aurora/Graphics/RenderManager.h>
 #include <Aurora/Utils/Logger.h>
 #include <Aurora/Utils/Timer.h>
@@ -50,6 +50,11 @@ public:
 private:
     void LoadResources();
     void InitializeStateVariables();
+      void DrawMenuOptions();
+      void DrawSelectedWorldInfo();
+      void DrawTextButtons();
+      void DrawParametricView();
+      void Clean();
 };
 
 #endif
