@@ -25,16 +25,16 @@
 #include <Minecraft/Mobs/Pig2.h>
 #include <Minecraft/Mobs/Creeper2.h>
 #include <Minecraft/Mobs/Sheep2.h>
-#include <Minecraft/LameMob.h>
+#include <Minecraft/Mobs/LameMob.h>
 #include <Minecraft/Furnace2.h>
 #include <Minecraft/Chest2.h>
 #include <Minecraft/DirectionBlock.h>
 #include <Minecraft/NoteBlockEntity.h>
 #include <Minecraft/JukeboxEntity.h>
-#include <Minecraft/MonsterSpawnerEntity.h>
+#include <Minecraft/Mobs/MonsterSpawnerEntity.h>
 #include <Minecraft/ItemFrameEntity.h>
 
-#include <Minecraft/LameFunctions.h>
+#include <Minecraft/Mobs/LameFunctions.h>
 #include <sys/time.h>
 #include <Aurora/Utils/Logger.h>
 #include <Aurora/Utils/Timer.h>

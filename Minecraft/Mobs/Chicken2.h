@@ -9,7 +9,7 @@
 
 #include <Aurora/Math/BoundingBox.h>
 #include <Aurora/Math/Frustum.h>
-#include <Minecraft/LameMob.h>
+#include <Minecraft/Mobs/LameMob.h>
 #include <Minecraft/Blocks.h>
 #include <Minecraft/CraftWorld2.h>
 

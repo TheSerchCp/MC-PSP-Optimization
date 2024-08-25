@@ -2,7 +2,7 @@
 #include <Minecraft/TextureHelper.h>
 
 #include <Minecraft/World/WorldGenerator.h>
-#include <Minecraft/LoadingScreen.h>
+#include <Minecraft/Screens/LoadingScreen.h>
 
 // #include "StateMenu.h"
 
@@ -427,16 +427,17 @@ void StatePlayCreative::LoadTextures()
 
     zombieTex = TextureHelper::Instance()->GetTexture(TextureHelper::zombieTexture);
     cowTex = TextureHelper::Instance()->GetTexture(TextureHelper::cowTexture);
+    endermanTex = TextureHelper::Instance()->GetTexture(TextureHelper::endermanTexture);
     chickenTex = TextureHelper::Instance()->GetTexture(TextureHelper::chickenTexture);
     pigTex = TextureHelper::Instance()->GetTexture(TextureHelper::pigTexture);
 
     red = TextureHelper::Instance()->GetTexture(TextureHelper::Red);
     black = TextureHelper::Instance()->GetTexture(TextureHelper::Black);
-    stars = TextureHelper::Instance()->GetTexture(TextureHelper::Stars);
     snowBall4 = TextureHelper::Instance()->GetTexture(TextureHelper::SnowBall3);
     suntex = TextureHelper::Instance()->GetTexture(TextureHelper::Sun);
     moontex = TextureHelper::Instance()->GetTexture(TextureHelper::Moon);
-    grassColorTex = TextureHelper::Instance()->GetTexture(TextureHelper::vegetationColorMap);
+    stars = TextureHelper::Instance()->GetTexture(TextureHelper::Stars);
+    
 
     // sprites
     waterScreen = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Blue));
@@ -455,29 +456,6 @@ void StatePlayCreative::LoadTextures()
     barSprite->SetPosition(240, 230);
     barSprite->Scale(1, 1);
 
-    selectSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils), 0, 22 * utilsSize / 182, 24 * utilsSize / 182, 24 * utilsSize / 182);
-    selectSprite->SetPosition(160, 230);
-    selectSprite->Scale(1, 1);
-
-    crossSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils), 24 * utilsSize / 182, 22 * utilsSize / 182, 9 * utilsSize / 182, 9 * utilsSize / 182);
-    crossSprite->SetPosition(240, 136);
-    crossSprite->Scale(270.0f / utilsSize, 270.0f / utilsSize);
-
-    lSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons), 111 * iconsSize / 182, 51 * iconsSize / 182, 16 * iconsSize / 182, 9 * iconsSize / 182, true);
-    lSprite->SetPosition(20, 255);
-    lSprite->Scale(1, 1);
-
-    rSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons), 128 * iconsSize / 182, 51 * iconsSize / 182, 16 * iconsSize / 182, 9 * iconsSize / 182, true);
-    rSprite->SetPosition(70, 255);
-    rSprite->Scale(1, 1);
-
-    l2Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons), 114 * iconsSize / 182, 62 * iconsSize / 182, 13 * iconsSize / 182, 13 * iconsSize / 182, true);
-    l2Sprite->SetPosition(20, 255);
-    l2Sprite->Scale(1, 1);
-
-    r2Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons), 128 * iconsSize / 182, 62 * iconsSize / 182, 13 * iconsSize / 182, 13 * iconsSize / 182, true);
-    r2Sprite->SetPosition(20, 255);
-    r2Sprite->Scale(1, 1);
 
     // menu section
     buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons), 0, 0, 95, 12); // stand
@@ -516,29 +494,12 @@ void StatePlayCreative::LoadTextures()
     furSprite->SetPosition(240, 136);
     furSprite->Scale(invGuiScale, invGuiScale);
 
-    sliderSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::invSlider), 0, 0, 12, 15); // 200
-    sliderSprite->SetPosition(240, 136);
-    sliderSprite->Scale(invGuiScale, invGuiScale);
 
-    sliderLightedSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::invSlider), 12, 0, 12, 15); // 200
-    sliderLightedSprite->SetPosition(240, 136);
-    sliderLightedSprite->Scale(invGuiScale, invGuiScale);
 
     float invArrowSize = TextureManager::Instance()->getWidth(TextureHelper::Instance()->GetTexture(TextureHelper::furArrow));
     float invArrowScale = 44.0f / invArrowSize;
 
-    for (int j = 13; j >= 0; j--)
-    {
-        toolPointSprite[j] = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils), 169 * utilsSize / 182, (49 + (13 - j) * 2) * utilsSize / 182, 13 * utilsSize / 182, 2 * utilsSize / 182, true); // 200
-        toolPointSprite[j]->SetPosition(240, 136);
-        toolPointSprite[j]->Scale(utilScale, utilScale);
-    }
-    for (int j = 13; j >= 0; j--)
-    {
-        smallToolPointSprite[j] = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils), 169 * utilsSize / 182, (49 + (13 - j) * 2) * utilsSize / 182, 13 * utilsSize / 182, 2 * utilsSize / 182, true); // 200
-        smallToolPointSprite[j]->SetPosition(240, 136);
-        smallToolPointSprite[j]->Scale(1, 1);
-    }
+  
 
     for (int j = 0; j <= 21; j++)
     {
@@ -557,8 +518,7 @@ void StatePlayCreative::LoadTextures()
         furFireSprite[13 - j]->Scale(invFireScale, invFireScale);
     }
 
-    selectInvSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::cursor)); // 200
-    selectInvSprite->SetPosition(96 + (invXPosition * 36), 28 + (invYPosition * 36));
+    
 
     invCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::invCell)); // 200
     invCellSprite->SetPosition(240, 136);
@@ -569,6 +529,7 @@ void StatePlayCreative::LoadTextures()
     skyBox = new SkyBox();
     destroyer = new Destroyer();
     starsBox = new StarsBox();
+    invPlayer = new InventoryPlayer();
 }
 
 void StatePlayCreative::SetCreativePage(char page)
@@ -9064,6 +9025,7 @@ void StatePlayCreative::Update(StateManager *sManager)
         {
             sleepTime -= dt;
         }
+
         if (sleepTime < 0.1f && sleepTime > 0.0f)
         {
             Vector3 previousPosition = mWorld->playerSpawnPointPosition;
@@ -9484,7 +9446,7 @@ void StatePlayCreative::Update(StateManager *sManager)
                 }
             }
 
-            // update position
+
             if (sleepTime <= 0.0f)
             {
                 if (!canFly)
@@ -11418,6 +11380,7 @@ void StatePlayCreative::Draw(StateManager *sManager)
             }
         }
     }
+   
     sceGuDisable(GU_BLEND);
 
     /// 3D BLOCKS AND ITEMS ON 2D PANEL //ui
@@ -12978,7 +12941,7 @@ void StatePlayCreative::advancedBlit(int sx, int sy, int sw, int sh, int dx, int
         sceGuDrawArray(GU_SPRITES, GU_TEXTURE_16BIT | GU_VERTEX_16BIT | GU_TRANSFORM_2D, 2, 0, vertices);
     }
 }
-
+//Validar gameMode
 bool StatePlayCreative::TryToMove(Vector3 moveVector, float dt)
 {
     // Build a "test vector" that is a little longer than the move vector.

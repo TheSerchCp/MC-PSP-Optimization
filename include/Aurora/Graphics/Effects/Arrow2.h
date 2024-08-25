@@ -9,7 +9,7 @@
 #include <Minecraft/Mobs/Creeper2.h>
 #include <Minecraft/Mobs/Enderman.h>
 #include <Minecraft/Mobs/Sheep2.h>
-#include <Minecraft/LameMob.h>
+#include <Minecraft/Mobs/LameMob.h>
 
 #include <Aurora/Math/Vector3.h>
 #include <Aurora/Graphics/Vertex.h>

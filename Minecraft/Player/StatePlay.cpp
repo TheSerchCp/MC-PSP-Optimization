@@ -1,8 +1,9 @@
 #include "StatePlay.h"
+#include "BaseState.h"
 #include <Minecraft/TextureHelper.h>
 
 #include <Minecraft/World/WorldGenerator.h>
-#include <Minecraft/LoadingScreen.h>
+#include <Minecraft/Screens/LoadingScreen.h>
 
 #define PI 3.14159265f
 #define DEG_TO_RAD (PI / 180.0f)
@@ -310,7 +311,10 @@ void StatePlay::InitParametric(bool makeTrees,bool makeDungeons,bool makeBonus,b
     cubeLight = 0.0f;
     bobCycle = PI/2.0f;
     bobCiclo = PI/2.0f;
-    loadReady = true;
+
+    if(gameMode == 0 || gameMode == 2){
+        loadReady = true;
+    }
 
     mWorld->haveCompass = mWorld->HaveItemInBarSlots(Compass::getID());
 
@@ -393,7 +397,7 @@ void StatePlay::LoadMap(std::string fileName,bool compressed)
     mWorld->playerZoneSize = Vector3(CHUNK_SIZE*mWorld->mainOptions.horizontalViewDistance,CHUNK_SIZE*mWorld->mainOptions.verticalViewDistance,CHUNK_SIZE*mWorld->mainOptions.horizontalViewDistance);
     mRender->fovv = mWorld->mainOptions.fov;
     RenderManager::InstancePtr()->SetPerspective(0, 480.0f / 272.0f, 0.18f, 1000.f);
-
+    
     loadReady = true;
 
     mWorld->haveCompass = mWorld->HaveItemInBarSlots(Compass::getID());
@@ -406,37 +410,36 @@ void StatePlay::LoadMap(std::string fileName,bool compressed)
 void StatePlay::LoadTextures()
 {
     //terrain texure
+    barItems = TextureHelper::Instance()->GetTexture(TextureHelper::Items1);
     texture = TextureHelper::Instance()->GetTexture(TextureHelper::Terrain1);
     texture_mips = TextureHelper::Instance()->GetTexture(TextureHelper::Terrain2);
     waterAnimation = TextureHelper::Instance()->GetTexture(TextureHelper::WaterAnimation);
-
-    invPlayerTex = TextureHelper::Instance()->GetTexture(TextureHelper::Steve);
     cloudsTex = TextureHelper::Instance()->GetTexture(TextureHelper::clouds1);
     clouds2Tex = TextureHelper::Instance()->GetTexture(TextureHelper::clouds2);
+    blue = TextureHelper::Instance()->GetTexture(TextureHelper::Blue);
+
     zombieTex = TextureHelper::Instance()->GetTexture(TextureHelper::zombieTexture);
+    cowTex = TextureHelper::Instance()->GetTexture(TextureHelper::cowTexture);
+    chickenTex = TextureHelper::Instance()->GetTexture(TextureHelper::chickenTexture);
     endermanTex = TextureHelper::Instance()->GetTexture(TextureHelper::endermanTexture);
     spiderTex = TextureHelper::Instance()->GetTexture(TextureHelper::spiderTexture);
     spidercaveTex = TextureHelper::Instance()->GetTexture(TextureHelper::cavespiderTexture);
-    cowTex = TextureHelper::Instance()->GetTexture(TextureHelper::cowTexture);
-	chickenTex = TextureHelper::Instance()->GetTexture(TextureHelper::chickenTexture);
 	pigTex = TextureHelper::Instance()->GetTexture(TextureHelper::pigTexture);
 
-    blue = TextureHelper::Instance()->GetTexture(TextureHelper::Blue);
+    //invPlayerTex = TextureHelper::Instance()->GetTexture(TextureHelper::Steve);
+
     red = TextureHelper::Instance()->GetTexture(TextureHelper::Red);
     black = TextureHelper::Instance()->GetTexture(TextureHelper::Black);
-
     snowBall4 = TextureHelper::Instance()->GetTexture(TextureHelper::SnowBall3);
-
     suntex = TextureHelper::Instance()->GetTexture(TextureHelper::Sun);
     moontex = TextureHelper::Instance()->GetTexture(TextureHelper::Moon);
     stars = TextureHelper::Instance()->GetTexture(TextureHelper::Stars);
-    rainTex  = TextureHelper::Instance()->GetTexture(TextureHelper::rainTexture);
+    //rainTex  = TextureHelper::Instance()->GetTexture(TextureHelper::rainTexture);
 
-    barItems = TextureHelper::Instance()->GetTexture(TextureHelper::Items1);
 
-    pumpkinMask = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::PumpkinMask));
-    pumpkinMask->SetPosition(240,136);
-    pumpkinMask->Scale(2.87f,2.84f);
+    // pumpkinMask = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::PumpkinMask));
+    // pumpkinMask->SetPosition(240,136);
+    // pumpkinMask->Scale(2.87f,2.84f);
 
     waterScreen = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Blue));
     waterScreen->SetPosition(240,136);
@@ -445,27 +448,27 @@ void StatePlay::LoadTextures()
     // hud section //ui
     int utilsSize = TextureManager::Instance()->getWidth(TextureHelper::Instance()->GetTexture(TextureHelper::Utils));
     float utilScale = 364.0f/(float)utilsSize;
-	
+
 	int iconsSize = TextureManager::Instance()->getWidth(TextureHelper::Instance()->GetTexture(TextureHelper::Icons));
     float iconScale = 364.0f/(float)iconsSize;
 
     barSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,0*utilsSize/182,182*utilsSize/182,22*utilsSize/182);
     barSprite->SetPosition(240,230);
     barSprite->Scale(1,1);
-	
-	///XP
-	XPbarSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*iconsSize/182,0*iconsSize/182,182*iconsSize/182,5*iconsSize/182,true);
-    XPbarSprite->SetPosition(149,212);
-    XPbarSprite->Scale(1,1);
-	
-	for(int j = 0; j <= 181; j++)
-    {
-		XPprogressSprite[j] = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*iconsSize/182,5*iconsSize/182,j*iconsSize/182,5*iconsSize/182,true);
-		XPprogressSprite[j]->SetPosition(149,212);
-		XPprogressSprite[j]->Scale(1,1);
-	}
-	
-	///END
+
+	// ///XP
+	// XPbarSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*iconsSize/182,0*iconsSize/182,182*iconsSize/182,5*iconsSize/182,true);
+    // XPbarSprite->SetPosition(149,212);
+    // XPbarSprite->Scale(1,1);
+
+	// for(int j = 0; j <= 181; j++)
+    // {
+	// 	XPprogressSprite[j] = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*iconsSize/182,5*iconsSize/182,j*iconsSize/182,5*iconsSize/182,true);
+	// 	XPprogressSprite[j]->SetPosition(149,212);
+	// 	XPprogressSprite[j]->Scale(1,1);
+	// }
+
+	// ///END
 
     selectSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,22*utilsSize/182,24*utilsSize/182,24*utilsSize/182);
     selectSprite->SetPosition(160,230);
@@ -474,131 +477,131 @@ void StatePlay::LoadTextures()
     crossSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24*utilsSize/182,22*utilsSize/182,9*utilsSize/182,9*utilsSize/182);
     crossSprite->SetPosition(240,136);
     crossSprite->Scale(270.0f/utilsSize,270.0f/utilsSize);
-	
+
 	///-----* BOTONES *-----///
-	
+
 	lSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),111*iconsSize/182,51*iconsSize/182,16*iconsSize/182,9*iconsSize/182,true);
     lSprite->SetPosition(20,255);
     lSprite->Scale(1,1);
-	
+
 	rSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),128*iconsSize/182,51*iconsSize/182,16*iconsSize/182,9*iconsSize/182,true);
     rSprite->SetPosition(70,255);
     rSprite->Scale(1,1);
-	
+
 	l2Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),114*iconsSize/182,62*iconsSize/182,13*iconsSize/182,13*iconsSize/182,true);
     l2Sprite->SetPosition(20,255);
     l2Sprite->Scale(1,1);
-	
+
 	r2Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),128*iconsSize/182,62*iconsSize/182,13*iconsSize/182,13*iconsSize/182,true);
     r2Sprite->SetPosition(20,255);
     r2Sprite->Scale(1,1);
-	
+
 	///-----* END *-----///
 
-    hpCellSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,36*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
-    hpCellSpriteW->SetPosition(100,100);
-    hpCellSpriteW->Scale(1,1);
+    // hpCellSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,36*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
+    // hpCellSpriteW->SetPosition(100,100);
+    // hpCellSpriteW->Scale(1,1);
+
+	// hpCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,46*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
+    // hpCellSprite->SetPosition(100,100);
+    // hpCellSprite->Scale(1,1);
+
+    // hgCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,56*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
+    // hgCellSprite->SetPosition(100,24);
+    // hgCellSprite->Scale(1,1);
 	
-	hpCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,46*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
-    hpCellSprite->SetPosition(100,100);
-    hpCellSprite->Scale(1,1);
+	// hg2CellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),20*iconsSize/182,56*iconsSize/182,82*iconsSize/182,10*iconsSize/182);
+    // hg2CellSprite->SetPosition(100,24);
+    // hg2CellSprite->Scale(1,1);
 
-    hgCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,56*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
-    hgCellSprite->SetPosition(100,24);
-    hgCellSprite->Scale(1,1);
+    // arCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,66*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
+    // arCellSprite->SetPosition(100,27);
+    // arCellSprite->Scale(1,1);
+
+    // hpSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpSprite->SetPosition(100,22);
+    // hpSprite->Scale(1,1);
+
+    // hpSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),20*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpSpriteW->SetPosition(100,22);
+    // hpSpriteW->Scale(1,1);
+
+    // hpHardSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpHardSprite->SetPosition(100,22);
+    // hpHardSprite->Scale(1,1);
+
+    // hpHardSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),20*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpHardSpriteW->SetPosition(100,22);
+    // hpHardSpriteW->Scale(1,1);
+
+    // hpHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),10*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpHalfSprite->SetPosition(100,22);
+    // hpHalfSprite->Scale(1,1);
+
+    // hpHalfSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),30*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpHalfSpriteW->SetPosition(100,22);
+    // hpHalfSpriteW->Scale(1,1);
+
+    // hpHardHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),10*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpHardHalfSprite->SetPosition(100,22);
+    // hpHardHalfSprite->Scale(1,1);
+
+    // hpHardHalfSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),30*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpHardHalfSpriteW->SetPosition(100,22);
+    // hpHardHalfSpriteW->Scale(1,1);
 	
-	hg2CellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),20*iconsSize/182,56*iconsSize/182,82*iconsSize/182,10*iconsSize/182);
-    hg2CellSprite->SetPosition(100,24);
-    hg2CellSprite->Scale(1,1);
-
-    arCellSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),60*utilsSize/182,66*utilsSize/182,82*utilsSize/182,10*utilsSize/182);
-    arCellSprite->SetPosition(100,27);
-    arCellSprite->Scale(1,1);
-
-    hpSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpSprite->SetPosition(100,22);
-    hpSprite->Scale(1,1);
-
-    hpSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),20*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpSpriteW->SetPosition(100,22);
-    hpSpriteW->Scale(1,1);
-
-    hpHardSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpHardSprite->SetPosition(100,22);
-    hpHardSprite->Scale(1,1);
-
-    hpHardSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),20*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpHardSpriteW->SetPosition(100,22);
-    hpHardSpriteW->Scale(1,1);
-
-    hpHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),10*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpHalfSprite->SetPosition(100,22);
-    hpHalfSprite->Scale(1,1);
-
-    hpHalfSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),30*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpHalfSpriteW->SetPosition(100,22);
-    hpHalfSpriteW->Scale(1,1);
-
-    hpHardHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),10*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpHardHalfSprite->SetPosition(100,22);
-    hpHardHalfSprite->Scale(1,1);
-
-    hpHardHalfSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),30*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpHardHalfSpriteW->SetPosition(100,22);
-    hpHardHalfSpriteW->Scale(1,1);
+	// //araña veneno
+	// hpVenenoSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpVenenoSprite->SetPosition(100,22);
+    // hpVenenoSprite->Scale(1,1);
 	
-	//araña veneno
-	hpVenenoSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpVenenoSprite->SetPosition(100,22);
-    hpVenenoSprite->Scale(1,1);
+	// hpVenenoHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),10*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpVenenoHalfSprite->SetPosition(100,22);
+    // hpVenenoHalfSprite->Scale(1,1);
 	
-	hpVenenoHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),10*utilsSize/182,56*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpVenenoHalfSprite->SetPosition(100,22);
-    hpVenenoHalfSprite->Scale(1,1);
+	// hpVenenoSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpVenenoSpriteW->SetPosition(100,22);
+    // hpVenenoSpriteW->Scale(1,1);
 	
-	hpVenenoSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),0*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpVenenoSpriteW->SetPosition(100,22);
-    hpVenenoSpriteW->Scale(1,1);
+	// hpVenenoHalfSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),10*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hpVenenoHalfSpriteW->SetPosition(100,22);
+    // hpVenenoHalfSpriteW->Scale(1,1);
+	// //-----**-----//
+
+    // hgSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),30*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hgSprite->SetPosition(100,26);
+    // hgSprite->Scale(1,1);
+
+    // hgHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),40*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // hgHalfSprite->SetPosition(100,26);
+    // hgHalfSprite->Scale(1,1);
 	
-	hpVenenoHalfSpriteW = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),10*utilsSize/182,66*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hpVenenoHalfSpriteW->SetPosition(100,22);
-    hpVenenoHalfSpriteW->Scale(1,1);
-	//-----**-----//
+	// hg2Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),20*iconsSize/182,46*iconsSize/182,10*iconsSize/182,10*iconsSize/182);
+    // hg2Sprite->SetPosition(100,26);
+    // hg2Sprite->Scale(1,1);
 
-    hgSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),30*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hgSprite->SetPosition(100,26);
-    hgSprite->Scale(1,1);
-
-    hgHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),40*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    hgHalfSprite->SetPosition(100,26);
-    hgHalfSprite->Scale(1,1);
+    // hg2HalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),30*iconsSize/182,46*iconsSize/182,10*iconsSize/182,10*iconsSize/182);
+    // hg2HalfSprite->SetPosition(100,26);
+    // hg2HalfSprite->Scale(1,1);
 	
-	hg2Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),20*iconsSize/182,46*iconsSize/182,10*iconsSize/182,10*iconsSize/182);
-    hg2Sprite->SetPosition(100,26);
-    hg2Sprite->Scale(1,1);
+    // bubbleSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // bubbleSprite->SetPosition(100,27);
+    // bubbleSprite->Scale(1,1);
 
-    hg2HalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Icons),30*iconsSize/182,46*iconsSize/182,10*iconsSize/182,10*iconsSize/182);
-    hg2HalfSprite->SetPosition(100,26);
-    hg2HalfSprite->Scale(1,1);
-	
-    bubbleSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),0*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    bubbleSprite->SetPosition(100,27);
-    bubbleSprite->Scale(1,1);
+    // arSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),10*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // arSprite->SetPosition(100,27);
+    // arSprite->Scale(1,1);
 
-    arSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),10*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    arSprite->SetPosition(100,27);
-    arSprite->Scale(1,1);
+    // arHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),20*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
+    // arHalfSprite->SetPosition(100,27);
+    // arHalfSprite->Scale(1,1);
 
-    arHalfSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),20*utilsSize/182,46*utilsSize/182,10*utilsSize/182,10*utilsSize/182);
-    arHalfSprite->SetPosition(100,27);
-    arHalfSprite->Scale(1,1);
-
-    for(int j = 13; j >= 0; j--)
-    {
-        toolPointSprite[j] = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),169*utilsSize/182,(49+(13-j)*2)*utilsSize/182,13*utilsSize/182,2*utilsSize/182,true);//200
-        toolPointSprite[j]->SetPosition(240,136);
-        toolPointSprite[j]->Scale(1,1);
-    }
+    // for(int j = 13; j >= 0; j--)
+    // {
+    //     toolPointSprite[j] = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),169*utilsSize/182,(49+(13-j)*2)*utilsSize/182,13*utilsSize/182,2*utilsSize/182,true);//200
+    //     toolPointSprite[j]->SetPosition(240,136);
+    //     toolPointSprite[j]->Scale(1,1);
+    // }
     //menu section
     buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Buttons),0,0,95,12); // stand
     buttonSprite->SetPosition(240,150);
@@ -671,7 +674,13 @@ void StatePlay::LoadTextures()
     invPlayer = new InventoryPlayer();
 }
 
+void BaseState::LoadTexturesSurvival(){
 
+}
+
+void BaseState::LoadTexturesCreative(){
+
+}
 
 void StatePlay::SetDayTimeAfterLoad()
 {
@@ -714,7 +723,7 @@ void StatePlay::CleanUp()
     delete barSprite;
     delete XPbarSprite;
 	
-	for(int j = 0; j <= 181; j++)
+	for(unsigned int j = 0; j <= 181; j++)
     {
 		delete XPprogressSprite[j];
 	}
@@ -838,131 +847,39 @@ int StatePlay::FindFurnaceId(int x, int y, int z)
 
 void StatePlay::CheckForFurnFuel(Furnace* Fur)
 {
-    int furnItem;
+   int furnItem = -1;
 
-    furnItem = -1;
-
-    if(Fur->furnaceSlotId[0] < 250 && Fur->furnaceSlotId[0] != -1)
-    {
-        furnItem = mWorld->blockTypes[Fur->furnaceSlotId[0]].furnItem;
-    }
-
-    if(Fur->furnaceSlotId[0] >= 250)
-    {
-        furnItem = mWorld->itemTypes[Fur->furnaceSlotId[0]-250].furnItem;
-    }
-
-    if(Fur->fuelTime <= 0 && furnItem != -1)
-    {
-        if(Fur->furnaceSlotId[1] == -1)
-            return;
-
-        bool used = false;
-
-        switch(Fur->furnaceSlotId[1])
-        {
-        case 8:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 31:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 34:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 296:
-            Fur->fuelTime = 5;
-            used = true;
-        break;
-        case 276:
-            Fur->fuelTime = 5;
-            used = true;
-        break;
-        case 277:
-            Fur->fuelTime = 80;
-            used = true;
-        break;
-        case 292:
-            Fur->fuelTime = 1000;
-            used = true;
-        break;
-        case 306:
-            Fur->fuelTime = 30;
-            used = true;
-        break;
-        case 59:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 71:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 72:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 100:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 105:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 125:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 155:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 156:
-            Fur->fuelTime = 15;
-            used = true;
-        break;
-        case 214:
-            Fur->fuelTime = 800;
-            used = true;
-        break;
-        case 250:
-            Fur->fuelTime = 10;
-            used = true;
-        break;
-        case 255:
-            Fur->fuelTime = 10;
-            used = true;
-        break;
-        case 260:
-            Fur->fuelTime = 10;
-            used = true;
-        break;
-        case 265:
-            Fur->fuelTime = 10;
-            used = true;
-        break;
-        case 270:
-            Fur->fuelTime = 10;
-            used = true;
-        break;
+    // Determinar el ítem del horno
+    if (Fur->furnaceSlotId[0] != -1) {
+        if (Fur->furnaceSlotId[0] < 250) {
+            furnItem = mWorld->blockTypes[Fur->furnaceSlotId[0]].furnItem;
+        } else {
+            furnItem = mWorld->itemTypes[Fur->furnaceSlotId[0] - 250].furnItem;
         }
+    }
 
-        if(used == true)
-        {
+    // Si no hay tiempo de combustible y hay un ítem válido
+    if (Fur->fuelTime <= 0 && furnItem != -1) {
+        if (Fur->furnaceSlotId[1] == -1) return;
+
+        static const std::map<int, int> fuelTimes = {
+            {8, 15}, {31, 15}, {34, 15}, {296, 5}, {276, 5},
+            {277, 80}, {292, 1000}, {306, 30}, {59, 15},
+            {71, 15}, {72, 15}, {100, 15}, {105, 15},
+            {125, 15}, {155, 15}, {156, 15}, {214, 800},
+            {250, 10}, {255, 10}, {260, 10}, {265, 10}, {270, 10}
+        };
+
+        auto it = fuelTimes.find(Fur->furnaceSlotId[1]);
+        if (it != fuelTimes.end()) {
+            Fur->fuelTime = it->second;
             Fur->furnaceSlotAm[1] -= 1;
-            if(Fur->furnaceSlotAm[1] == 0)
-            {
+            if (Fur->furnaceSlotAm[1] == 0) {
                 Fur->furnaceSlotAm[1] = -1;
                 Fur->furnaceSlotId[1] = -1;
                 Fur->furnaceSlotSt[1] = 0;
             }
-        }
-        else
-        {
+        } else {
             Fur->meltingTime = 0.0f;
         }
     }
@@ -1709,7 +1626,6 @@ void StatePlay::NewCraftingSystem3x3()
 	}
 	}
 }*/
-
 
 /// Need to create new crafting system. Too many recipes cause mistakes and errors due to this system
 void StatePlay::CraftItem3x3()
@@ -10013,7 +9929,6 @@ void StatePlay::HandleEvents(StateManager* sManager)
     }
 }
 
-
 void StatePlay::Update(StateManager* sManager)
 {
     if(mWorld->armorAm[0] <= 0)
@@ -10436,7 +10351,7 @@ void StatePlay::Update(StateManager* sManager)
             if (musicTime < 0.0f)
             {
                 musicTime = 300.0f;
-                if(mWorld->mainOptions.music == true)
+                if(mWorld->mainOptions.music)
                 {
 					switch(rand() % 2)
 					{
@@ -11456,9 +11371,10 @@ void StatePlay::Update(StateManager* sManager)
                 mWorld->UpdateCompassTexture((fppCam->horAngle/180.0f)*PI);
             }
         }
+
+
     }
 }
-
 
 void StatePlay::Draw(StateManager* sManager)
 {
@@ -12062,7 +11978,6 @@ void StatePlay::Draw(StateManager* sManager)
         }
     }
 
-	int Acumulado = mWorld->EXP+1;
 
     ///ENDERMAN
     if(mWorld->mEndermans.empty() == false)
@@ -13187,7 +13102,8 @@ void StatePlay::Draw(StateManager* sManager)
         DrawSetDepthMask(false);
         DrawSetDepthTest(true);
 	}
-	// draw dark mask
+	
+    // draw dark mask
     if((invEn == 1 || craft3xEn == 1 || chestEn == 1 || menuState != 0 || furnaceEn == 1) && makeScreen == false)
     {
         DrawSetDepthTest(false);
@@ -13614,6 +13530,7 @@ void StatePlay::Draw(StateManager* sManager)
 				}
 			}
         }
+
     }
     else
     {
@@ -13677,7 +13594,8 @@ void StatePlay::Draw(StateManager* sManager)
             }
         }
     }
-	DrawSetBlend(false);
+
+    DrawSetBlend(false);
 
     /// 3D BLOCKS AND ITEMS ON 2D PANEL //ui
     if ((invEn == false && craft3xEn == false && chestEn == false && menuState == 0 && mWorld->mainOptions.guiDrawing == 1 && furnaceEn == false) || (makeScreen == true && mWorld->mainOptions.guiDrawing == 1))
@@ -13872,7 +13790,6 @@ void StatePlay::Draw(StateManager* sManager)
         MatrixPop();
     }
 
-
     ///CRAFTING TABLE
     if(craft3xEn == true)
     {
@@ -13931,7 +13848,6 @@ void StatePlay::Draw(StateManager* sManager)
 
     ///CHEST///opensound//
 
-
     if(chestEn == true)
     {
 		
@@ -13965,7 +13881,6 @@ void StatePlay::Draw(StateManager* sManager)
     }
 
     ///FURNACE
-	
     if(furnaceEn == true)
     {
         if(UseFurnace->furnaceSlotId[0] != -1)
@@ -14448,7 +14363,7 @@ void StatePlay::Draw(StateManager* sManager)
             }
         }
     }
-
+    //Sleep message near enemies
     if(sleepMessageTime > 0.0f)
     {
         sceGuDisable(GU_DEPTH_TEST);
@@ -14743,6 +14658,7 @@ void StatePlay::Draw(StateManager* sManager)
             DrawAmount(322,88,UseFurnace->furnaceSlotAm[2]);
         }
     }
+
     sceGuDisable(GU_BLEND);
     sceGuEnable(GU_DEPTH_TEST);
 
@@ -15485,7 +15401,7 @@ void StatePlay::advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy, int
         sceGuDrawArray(GU_SPRITES,GU_TEXTURE_16BIT|GU_VERTEX_16BIT|GU_TRANSFORM_2D,2,0,vertices);
     }
 }
-
+//Validar gameMode
 bool StatePlay::TryToMove(Vector3 moveVector,float dt)
 {
     // Build a "test vector" that is a little longer than the move vector.
@@ -15773,7 +15689,6 @@ bool StatePlay::keyHold(int currentKey)
     return false;
 }
 
-
 void StatePlay::HungerTime()
 {
     if(mWorld->HG >= 16)
@@ -16000,4 +15915,3 @@ void StatePlay::DrawAmount(int x,int y, int amount) //ui
 		
 	///	/* --- HOLA BUSCA CODIGOS :) SALUDOS DESDE ECUADOR --- */	///
 }
-

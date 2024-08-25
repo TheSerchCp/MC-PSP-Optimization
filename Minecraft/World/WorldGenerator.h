@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <Minecraft/LoadingScreen.h>
+#include <Minecraft/Screens/LoadingScreen.h>
 
 #include <zlib.h>
 #include <dirent.h>
@@ -23,7 +23,7 @@
 
 #include "SimplexNoise.h"
 #include <Minecraft/Chest2.h>
-#include <Minecraft/MonsterSpawnerEntity.h>
+#include <Minecraft/Mobs/MonsterSpawnerEntity.h>
 
 
 

@@ -1,5 +1,4 @@
 #include <Minecraft/Items.h>
-
 //items' id begin from 250
 
 WoodenPickaxe::WoodenPickaxe():BaseItem()
@@ -1889,17 +1888,3 @@ EndermanEGG::EndermanEGG():BaseItem()
 }
 
 item_t EndermanEGG::getID(){ return 411;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-

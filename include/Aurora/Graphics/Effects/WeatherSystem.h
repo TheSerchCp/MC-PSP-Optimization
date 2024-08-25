@@ -6,7 +6,7 @@
 #include <pspmath.h>
 #include <Aurora/Math/Frustum.h>
 #include <Minecraft/CraftWorld2.h>
-#include <Minecraft/LameFunctions.h>
+#include <Minecraft/Mobs/LameFunctions.h>
 #include <Aurora/Math/BoundingBox.h>
 #include <Minecraft/TextureHelper.h>
 

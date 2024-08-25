@@ -43,67 +43,6 @@ using namespace Aurora;
 
 
 #define PI 3.1415926535897f
-//Actuara como la clase base para todas las pantallas
-
-//Struct para ingresar en la posicion , cada posicion para
-//rendirar a steve
-struct steveHead {
-	int posX;
-	int posY;
-};
-struct steveHeadCapa {
-	int posX;
-	int posY;
-};
-struct steveBody {
-	int posX;
-	int posY;
-};
-struct steveLegBody0 {
-	int posX;
-	int posY;
-};
-struct steveLegBody1 {
-	int posX;
-	int posY;
-};
-struct steveHand0 {
-	int posX;
-	int posY;
-};
-struct steveHand1 {
-	int posX;
-	int posY;
-};
-struct  stevePos{
-	steveHead head;
-	steveHeadCapa headCapa;
-	steveBody body;
-	steveLegBody0 leg1;
-	steveLegBody1 leg2;
-	steveHand0 hand1;
-	steveHand1 hand2;
-};
-
-///Struct para posicion de boton, y posicion de texto
-struct posButton {
-	float posX;
-	float posY;
-};
-struct posText {
-	float posX;
-	float posY;
-};
-struct posDrawBt {
-	posButton button;
-	posText txt;
-};
-
-struct btScale {
-	int X;
-	int Y;
-};
-
 class SaveFile
 {
 public:
@@ -144,36 +83,66 @@ public:
 	void Update(StateManager* sManager);
 	void Draw(StateManager* sManager);
 
-	/*Draw independents for each screen*/
+private:
 
-	//DrawText
+	void ScanSaveFiles(const char* dirName);
+	void ScanTexturePacks(const char* dirName);
 	void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
-	//buttonSprite
-	void DrawButton(posDrawBt drawBt,btScale btscale, bool isSelected, const char* label = ""); 
-	//sbuttonSprite
-	void DrawSButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
-	//buttonSmallSprite
-	void DrawSmallButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
-	//sbuttonSmallSprite
-	void DrawSButtonSmall(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
-	//nbuttonSprite
-	void DrawNButton(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
-	//nbuttonSprite
-	void DrawNButtonSmall(posDrawBt drawBt,btScale btscale,bool isSelected, const char *label = ""); 
-	//backSprite
-	void DrawBackButton(posDrawBt drawBt,btScale btscale, bool isSelected, const char* label = "");
+	inline bool fileExists(const std::string& name);
+	int fileSize(const std::string& name);
 
-	void DrawTextLabel(int posX, int posY, const char* label, bool isSelected = false);
-	void DrawMenuHeader(const char* header);
-	void DrawBackground();
-	void DrawMinecraft(int posX, int posY);
-	void DrawSkin(int posX, int posY);
-	void DrawLanguage(int posX, int posY);
-	void DrawSSkin(int posX, int posY);
-	void DrawSLanguage(int posX, int posY);
-	void DrawSteve(stevePos pos);
+    unsigned int hash(const char* s, unsigned int seed);
 
-	 Sprite *backgroundSprite;
+private:
+
+    typedef struct Statistics
+    {
+        unsigned short blockPlaced;
+        unsigned short blockDestroyed;
+        unsigned short daysInGame;
+        unsigned short minutesPlayed;
+        unsigned short itemsCrafted;
+        unsigned short itemsSmelted;
+        unsigned short jumps;
+        unsigned short dies;
+        unsigned short foodEaten;
+        unsigned short badlyFalls;
+        unsigned short blocksWalked;
+        unsigned short treesGrowned;
+        unsigned short cropsGrowned;
+        unsigned short soilPlowed;
+        unsigned short timeInWater;
+        unsigned short timeInAir;
+        unsigned short damageRecieved;
+    } st;
+
+    typedef struct Options
+    {
+        bool useMipsTexturing;
+        bool detailedSky;
+        bool fastRendering;
+        bool newSprintOption;
+        bool freezeDayTime;
+        bool sounds;
+        bool music;
+        bool autoJump;
+        bool worldBlockAnimation;
+        bool fogRendering;
+        bool smoothLighting;
+        bool particles;
+        bool guiDrawing;
+        bool buttonsDrawing;
+
+        float fov;
+        char horizontalViewDistance;
+        char verticalViewDistance;
+        int difficult;
+    } opt;
+
+    st mainStatistics;
+    opt mainOptions;
+
+    Sprite *backgroundSprite;
     float bx, by;
     bool directionx;
     bool directiony;
@@ -199,7 +168,7 @@ public:
 	Sprite *skinSprite;
 	Sprite *sskinSprite;
 	Sprite *logoSprite;
-	Sprite *MinecraftSprite;
+	Sprite *lamecraftSprite;
 
 	Sprite *rectFilledSprite;
 	Sprite *rectEmptySprite;
@@ -293,65 +262,7 @@ public:
 	int tpStart;
 	int tpPos;
 	int tpSelectPos;
-
-private:
-
-	void ScanSaveFiles(const char* dirName);
-	void ScanTexturePacks(const char* dirName);
-	inline bool fileExists(const std::string& name);
-	int fileSize(const std::string& name);
-
-    unsigned int hash(const char* s, unsigned int seed);
-
-private:
-
-    typedef struct Statistics
-    {
-        unsigned short blockPlaced;
-        unsigned short blockDestroyed;
-        unsigned short daysInGame;
-        unsigned short minutesPlayed;
-        unsigned short itemsCrafted;
-        unsigned short itemsSmelted;
-        unsigned short jumps;
-        unsigned short dies;
-        unsigned short foodEaten;
-        unsigned short badlyFalls;
-        unsigned short blocksWalked;
-        unsigned short treesGrowned;
-        unsigned short cropsGrowned;
-        unsigned short soilPlowed;
-        unsigned short timeInWater;
-        unsigned short timeInAir;
-        unsigned short damageRecieved;
-    } st;
-
-    typedef struct Options
-    {
-        bool useMipsTexturing;
-        bool detailedSky;
-        bool fastRendering;
-        bool newSprintOption;
-        bool freezeDayTime;
-        bool sounds;
-        bool music;
-        bool autoJump;
-        bool worldBlockAnimation;
-        bool fogRendering;
-        bool smoothLighting;
-        bool particles;
-        bool guiDrawing;
-        bool buttonsDrawing;
-
-        float fov;
-        char horizontalViewDistance;
-        char verticalViewDistance;
-        int difficult;
-    } opt;
-
-    st mainStatistics;
-    opt mainOptions;
-
 };
+
 
 #endif

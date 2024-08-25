@@ -33,7 +33,7 @@
 #include <Minecraft/Mobs/Creeper2.h>
 #include <Minecraft/Mobs/Enderman.h>
 #include <Minecraft/Mobs/Sheep2.h>
-#include <Minecraft/LameMob.h>
+#include <Minecraft/Mobs/LameMob.h>
 
 #include <Minecraft/Screens/StateMenu.h>
 
@@ -44,10 +44,10 @@
 #include <Minecraft/Furnace2.h>
 #include <Minecraft/NoteBlockEntity.h>
 #include <Minecraft/JukeboxEntity.h>
-#include <Minecraft/MonsterSpawnerEntity.h>
+#include <Minecraft/Mobs/MonsterSpawnerEntity.h>
 #include <Minecraft/ItemFrameEntity.h>
 
-#include <Minecraft/LameFunctions.h>
+#include <Minecraft/Mobs/LameFunctions.h>
 
 
 using namespace Aurora::Graphics;
@@ -62,56 +62,56 @@ public:
 	StatePlayCreative();
 	virtual ~StatePlayCreative();
 
-	void Init();
-	void InitParametric(bool makeTrees,bool makeDungeons,bool makeBonus,bool makeCaves, unsigned int seedIII, int worldType, char gameMode);
-	void Enter();
-	void CleanUp();
+	// void Init();
+	// void InitParametric(bool makeTrees,bool makeDungeons,bool makeBonus,bool makeCaves, unsigned int seedIII, int worldType, char gameMode);
+	// void Enter();
+	// void CleanUp();
 
-	void Pause();
-	void Resume();
-	void LoadTextures();
+	// void Pause();
+	// void Resume();
+	// void LoadTextures();
 
-	void HandleEvents(StateManager* sManager);
-	void Update(StateManager* sManager);
-	void Draw(StateManager* sManager);
+	// void HandleEvents(StateManager* sManager);
+	// void Update(StateManager* sManager);
+	// void Draw(StateManager* sManager);
 
-	void LoadMap(std::string fileName,bool compressed);
-	void SetWorldAndSaveName(std::string worldName,std::string fileName);
-	void InitCamera();
+	// void LoadMap(std::string fileName,bool compressed);
+	// void SetWorldAndSaveName(std::string worldName,std::string fileName);
+	// void InitCamera();
 
-	//keys helpers
-	bool keyPressed(int currentKey);
-	bool keyHold(int currentKey);
-	void PutInInventory(int id, int num, bool st);
-
-private:
-
-	void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy, int slice);
-	bool TryToMove(Vector3 moveVector,float dt);
-	void SetDayTimeAfterLoad();
-	void CraftItem2x2();
-	void CraftItem3x3();
-
-	void CheckForFurnFuel(Furnace* Fur);
-	void CheckForFurnWorking(Furnace* Fur);
-	void ReadyFurnSmelting(Furnace* Fur);
-
-    int FindFurnaceId(int x, int y, int z);
-
-	int FindChestId(int x, int y, int z);
-
+	// //keys helpers
+	// bool keyPressed(int currentKey);
+	// bool keyHold(int currentKey);
+	// void PutInInventory(int id, int num, bool st);
 
 private:
 
-	RenderManager *mRender;
-	SystemManager *mSystemMgr;
-	SoundManager *mSoundMgr;
-	InputHelper *mIhelper;
-	Camera *fppCam;
+	// void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy, int slice);
+	// bool TryToMove(Vector3 moveVector,float dt);
+	// void SetDayTimeAfterLoad();
+	// void CraftItem2x2();
+	// void CraftItem3x3();
 
-	std::string saveFileName;
-	int freeMemory;
-	float freeMemoryTimer;
+	// void CheckForFurnFuel(Furnace* Fur);
+	// void CheckForFurnWorking(Furnace* Fur);
+	// void ReadyFurnSmelting(Furnace* Fur);
+
+    // int FindFurnaceId(int x, int y, int z);
+
+	// int FindChestId(int x, int y, int z);
+
+
+private:
+
+	// RenderManager *mRender;
+	// SystemManager *mSystemMgr;
+	// SoundManager *mSoundMgr;
+	// InputHelper *mIhelper;
+	// Camera *fppCam;
+
+	// std::string saveFileName;
+	// int freeMemory;
+	// float freeMemoryTimer;
 
     float cloudsOffset;
 
@@ -141,7 +141,6 @@ private:
     float furnaceTimes;
 
     Vector3 testPos1;
-
 	Vector3 cubePos;
 	bool showCube;
 

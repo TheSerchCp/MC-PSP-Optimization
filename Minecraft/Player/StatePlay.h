@@ -37,7 +37,7 @@
 #include <Minecraft/Mobs/Creeper2.h>
 #include <Minecraft/Mobs/Enderman.h>
 #include <Minecraft/Mobs/Sheep2.h>
-#include <Minecraft/LameMob.h>
+#include <Minecraft/Mobs/LameMob.h>
 
 #include <Minecraft/CraftWorld2.h>
 #include <Minecraft/InputHelper.h>
@@ -46,10 +46,10 @@
 #include <Minecraft/Furnace2.h>
 #include <Minecraft/NoteBlockEntity.h>
 #include <Minecraft/JukeboxEntity.h>
-#include <Minecraft/MonsterSpawnerEntity.h>
+#include <Minecraft/Mobs/MonsterSpawnerEntity.h>
 #include <Minecraft/ItemFrameEntity.h>
 
-#include <Minecraft/LameFunctions.h>
+#include <Minecraft/Mobs/LameFunctions.h>
 
 using namespace Aurora::Graphics;
 using namespace Aurora::Utils;

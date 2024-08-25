@@ -1,6 +1,6 @@
 #include<Minecraft/World/WorldGenerator.h>
 #include <Minecraft/CraftWorld2.h>
-#include <Minecraft/LoadingScreen.h>
+#include <Minecraft/Screens/LoadingScreen.h>
 #include <me/me.h>
 
 #include <Aurora/Utils/Logger.h>
